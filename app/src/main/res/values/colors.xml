@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material Palette -->
+    <color name="DarkPrimary">#D32F2F</color>
+    <color name="PrimaryColor">#F44336</color>
+    <color name="LightPrimaryColor">#FFCDD2</color>
+    <color name="TextAndIcons">#FFFFFF</color>
+    <color name="AccentColor">#FF9800</color>
+    <color name="PrimaryText">#212121</color>
+    <color name="SecondaryText">#727272</color>
+    <color name="DividerColor">#B6B6B6</color>
+
+</resources>
