@@ -20,10 +20,9 @@ public class MainActivity extends ActionBarActivity {
 
     String email = "freetymesunkiyan@gmail.com";
 
-    int[] icons = {R.drawable.home, R.drawable.events, R.drawable.mail, R.drawable.shop,
-            R.drawable.travel};
-
     int profile = R.drawable.photo;
+
+    int[] icons = {R.drawable.ic_measure, R.drawable.ic_history, R.drawable.ic_settings};
 
     RecyclerView mRcView;
 
