@@ -1,6 +1,11 @@
 package me.freetymekiyan.smartring;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,8 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+public class MainActivity extends ActionBarActivity implements
+        MeasureOneFragment.OnFragmentInteractionListener,
+        MeasureSeriesFragment.OnFragmentInteractionListener {
 
-public class MainActivity extends ActionBarActivity {
+    public static final String KEY_TITLE = "title";
 
     private Toolbar toolbar;
 
@@ -66,6 +74,43 @@ public class MainActivity extends ActionBarActivity {
         drawer.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
+        MeasurePagerAdapter mPagerAdapter = new MeasurePagerAdapter(getSupportFragmentManager());
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mPagerAdapter);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    public class MeasurePagerAdapter extends FragmentPagerAdapter {
+
+        public MeasurePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return (Fragment) MeasureOneFragment.newInstance(getApplicationContext().getString(
+                        R.string.title_fragment_measure_one));
+            } else {
+                return (Fragment) MeasureSeriesFragment
+                        .newInstance(getApplicationContext().getString(
+                                R.string.title_fragment_measure_series));
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return getItem(position).getArguments().getString("title");
+        }
     }
 
     @Override

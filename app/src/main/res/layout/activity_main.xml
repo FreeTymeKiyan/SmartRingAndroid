@@ -15,16 +15,22 @@
         android:layout_height="match_parent"
         android:elevation="7sp">
 
-        <RelativeLayout
+        <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <android.support.v4.view.PagerTitleStrip
+                android:id="@+id/pager_title_strip"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/hello_world" />
+                android:layout_gravity="top"
+                android:background="@color/AccentColor"
+                android:textColor="@color/TextAndIcons"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp" />
 
-        </RelativeLayout>
+        </android.support.v4.view.ViewPager>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycle_view"
