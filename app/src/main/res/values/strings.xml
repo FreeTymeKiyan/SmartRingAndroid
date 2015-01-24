@@ -21,4 +21,6 @@
     <string name="title_fragment_measure_one">One</string>
     <string name="title_fragment_measure_series">Series</string>
 
+    <string name="nfc">NFC State</string>
+
 </resources>
