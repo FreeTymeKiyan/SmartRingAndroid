@@ -1,5 +1,6 @@
 package me.freetymekiyan.smartring;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +40,7 @@ public class MainActivity extends ActionBarActivity implements
 
     RecyclerView.LayoutManager mLayoutManager;
 
-    DrawerLayout Drawer;
+    DrawerLayout drawer;
 
     ActionBarDrawerToggle mDrawerToggle;
 
@@ -57,7 +59,7 @@ public class MainActivity extends ActionBarActivity implements
         mLayoutManager = new LinearLayoutManager(this);
         mRcView.setLayoutManager(mLayoutManager);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
+        drawer = (DrawerLayout) findViewById(R.id.drawer);
         mDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open_drawer,
                 R.string.close_drawer) {
             @Override
@@ -70,9 +72,29 @@ public class MainActivity extends ActionBarActivity implements
                 super.onDrawerClosed(drawerView);
             }
         };
-
         drawer.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
+
+        mRcView.addOnItemTouchListener(new RecyclerItemClickListener(MainActivity.this,
+                new RecyclerItemClickListener.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        switch (position) {
+                            case 3:
+                                startActivity(
+                                        new Intent(MainActivity.this, SettingsActivity.class));
+                                break;
+                            case 1:
+                                drawer.closeDrawer(Gravity.LEFT);
+                                break;
+                            case 2:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }));
 
         MeasurePagerAdapter mPagerAdapter = new MeasurePagerAdapter(getSupportFragmentManager());
         ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
