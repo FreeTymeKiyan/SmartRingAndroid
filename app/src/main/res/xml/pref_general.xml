@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="@string/key_user"
+        android:title="@string/user">
+
+        <EditTextPreference
+            android:key="@string/key_name"
+            android:title="@string/name"
+            />
+
+        <SwitchPreference
+            android:key="@string/key_gender"
+            android:title="@string/gender"
+            />
+
+        <EditTextPreference
+            android:key="@string/key_weight"
+            android:title="@string/weight"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/key_reminder"
+        android:title="@string/reminder">
+
+        <ListPreference
+            android:key="@string/key_frequency"
+            android:title="@string/frequency"
+            />
+
+        <Preference
+            android:key="@string/key_time"
+            android:title="@string/time"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/about_us">
+        <Preference
+            android:title="@string/about">
+        </Preference>
+        <Preference
+            android:title="@string/faq">
+        </Preference>
+        <Preference
+            android:title="@string/feedback">
+        </Preference>
+
+    </PreferenceCategory>
+
+    <Preference
+        android:title="@string/share">
+
+    </Preference>
+
+
+</PreferenceScreen>

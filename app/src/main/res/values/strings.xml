@@ -17,10 +17,29 @@
     </string-array>
 
     <string name="title_activity_measure">MeasureActivity</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_fragment_measure_one">One</string>
     <string name="title_fragment_measure_series">Series</string>
 
     <string name="nfc">NFC State</string>
+
+    <string name="user">User</string>
+    <string name="key_user">key_user</string>
+    <string name="reminder">Reminder</string>
+    <string name="key_reminder">key_reminder</string>
+    <string name="about_us">About Us</string>
+    <string name="share">Share</string>
+    <string name="key_name">key_name</string>
+    <string name="name">Name</string>
+    <string name="key_gender">key_gender</string>
+    <string name="gender">Gender</string>
+    <string name="key_frequency">key_frequency</string>
+    <string name="frequency">Frequency</string>
+    <string name="key_time">key_time</string>
+    <string name="time">Time</string>
+    <string name="about">About</string>
+    <string name="faq">FAQ</string>
+    <string name="feedback">Feedback</string>
+    <string name="key_weight">key_weight</string>
+    <string name="weight">weight</string>
 
 </resources>
