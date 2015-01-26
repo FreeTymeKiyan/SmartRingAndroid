@@ -1,7 +1,6 @@
 package me.freetymekiyan.smartring;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,7 @@ public class DrawListAdapter extends RecyclerView.Adapter<DrawListAdapter.ViewHo
 
     private String email;
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         int holderId;
 
@@ -47,19 +46,12 @@ public class DrawListAdapter extends RecyclerView.Adapter<DrawListAdapter.ViewHo
                 tvTitle = (TextView) itemView.findViewById(R.id.rowText);
                 ivIcon = (ImageView) itemView.findViewById(R.id.rowIcon);
                 holderId = TYPE_ITEM;
-                itemView.setOnClickListener(this);
             } else {
                 tvName = (TextView) itemView.findViewById(R.id.name);
                 tvEmail = (TextView) itemView.findViewById(R.id.email);
                 ivProfile = (ImageView) itemView.findViewById(R.id.circleView);
                 holderId = TYPE_HEADER;
             }
-        }
-
-        @Override
-        public void onClick(View v) {
-            Log.d("DEBUG", "pos: " + getPosition());
-
         }
     }
 
