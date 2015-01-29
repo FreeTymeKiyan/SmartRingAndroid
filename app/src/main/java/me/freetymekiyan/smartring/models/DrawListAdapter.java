@@ -1,4 +1,4 @@
-package me.freetymekiyan.smartring;
+package me.freetymekiyan.smartring.models;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import me.freetymekiyan.smartring.R;
 
 /**
  * Created by Kiyan on 1/12/15.

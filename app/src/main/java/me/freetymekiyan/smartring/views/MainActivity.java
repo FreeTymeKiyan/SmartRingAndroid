@@ -1,4 +1,4 @@
-package me.freetymekiyan.smartring;
+package me.freetymekiyan.smartring.views;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +17,10 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import me.freetymekiyan.smartring.R;
+import me.freetymekiyan.smartring.controllers.RecyclerItemClickListener;
+import me.freetymekiyan.smartring.models.DrawListAdapter;
 
 public class MainActivity extends ActionBarActivity implements
         MeasureOneFragment.OnFragmentInteractionListener,

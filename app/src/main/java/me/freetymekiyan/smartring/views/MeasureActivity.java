@@ -1,4 +1,4 @@
-package me.freetymekiyan.smartring;
+package me.freetymekiyan.smartring.views;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import me.freetymekiyan.smartring.R;
 
 
 public class MeasureActivity extends ActionBarActivity {
