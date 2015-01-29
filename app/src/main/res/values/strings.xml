@@ -31,16 +31,36 @@
     <string name="share">Share</string>
     <string name="key_name">key_name</string>
     <string name="name">Name</string>
+    <string name="name_summary">Enter user name</string>
     <string name="key_gender">key_gender</string>
     <string name="gender">Gender</string>
+    <string name="male_short">M</string>
+    <string name="female_short">F</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="gender_summary">Specify gender to get correct analysis on heart rate</string>
     <string name="key_frequency">key_frequency</string>
     <string name="frequency">Frequency</string>
+    <string-array name="frequency">
+        <item>@string/daily</item>
+        <item>@string/weekly</item>
+        <item>@string/monthly</item>
+    </string-array>
+    <string-array name="frequency_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
     <string name="key_time">key_time</string>
     <string name="time">Time</string>
     <string name="about">About</string>
     <string name="faq">FAQ</string>
     <string name="feedback">Feedback</string>
     <string name="key_weight">key_weight</string>
-    <string name="weight">weight</string>
-
+    <string name="weight">Weight</string>
+    <string name="weight_unit">lbs</string>
+    <string name="weight_summary">Enter your weight for analysis</string>
 </resources>
