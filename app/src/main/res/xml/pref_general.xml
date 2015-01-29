@@ -6,19 +6,22 @@
         android:title="@string/user">
 
         <EditTextPreference
+            android:inputType="textPersonName"
             android:key="@string/key_name"
-            android:title="@string/name"
-            />
+            android:title="@string/name" />
 
         <SwitchPreference
             android:key="@string/key_gender"
-            android:title="@string/gender"
-            />
+            android:summaryOff="@string/female"
+            android:summaryOn="@string/male"
+            android:switchTextOff="@string/female_short"
+            android:switchTextOn="@string/male_short"
+            android:title="@string/gender" />
 
         <EditTextPreference
+            android:inputType="number"
             android:key="@string/key_weight"
-            android:title="@string/weight"
-            />
+            android:title="@string/weight" />
 
     </PreferenceCategory>
 
@@ -27,33 +30,26 @@
         android:title="@string/reminder">
 
         <ListPreference
+            android:defaultValue="@string/daily"
+            android:entries="@array/frequency"
+            android:entryValues="@array/frequency_values"
             android:key="@string/key_frequency"
-            android:title="@string/frequency"
-            />
+            android:title="@string/frequency" />
 
         <Preference
             android:key="@string/key_time"
-            android:title="@string/time"
-            />
+            android:title="@string/time" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/about_us">
-        <Preference
-            android:title="@string/about">
-        </Preference>
-        <Preference
-            android:title="@string/faq">
-        </Preference>
-        <Preference
-            android:title="@string/feedback">
-        </Preference>
+    <PreferenceCategory android:title="@string/about_us">
+        <Preference android:title="@string/about"></Preference>
+        <Preference android:title="@string/faq"></Preference>
+        <Preference android:title="@string/feedback"></Preference>
 
     </PreferenceCategory>
 
-    <Preference
-        android:title="@string/share">
+    <Preference android:title="@string/share">
 
     </Preference>
 
