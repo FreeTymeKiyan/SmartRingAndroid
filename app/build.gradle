@@ -20,6 +20,10 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    maven { url "http://nexus.antczak.org/content/repositories/thirdparty/" }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -29,4 +33,5 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile 'de.hdodenhof:circleimageview:1.2.1'
     compile 'com.skyfishjy.ripplebackground:library:1.0.1'
+    compile 'com.android.support:support-v4-preferencefragment:1.0.0'
 }
