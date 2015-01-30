@@ -1,12 +1,7 @@
 package me.freetymekiyan.smartring.views;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,24 +14,24 @@ import android.view.MenuItem;
 import android.view.View;
 
 import me.freetymekiyan.smartring.R;
+import me.freetymekiyan.smartring.controllers.OnFragmentInteractionListener;
 import me.freetymekiyan.smartring.controllers.RecyclerItemClickListener;
 import me.freetymekiyan.smartring.models.DrawListAdapter;
 
-public class MainActivity extends ActionBarActivity implements
-        MeasureOneFragment.OnFragmentInteractionListener,
-        MeasureSeriesFragment.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity implements OnFragmentInteractionListener {
 
     public static final String KEY_TITLE = "title";
 
+    private final String name = "Yang Liu";
+
+    private final String email = "freetymesunkiyan@gmail.com";
+
+    private final int profile = R.drawable.photo;
+
+    private final int[] icons = {R.drawable.ic_measure, R.drawable.ic_history,
+            R.drawable.ic_settings};
+
     private Toolbar toolbar;
-
-    String name = "Yang Liu";
-
-    String email = "freetymesunkiyan@gmail.com";
-
-    int profile = R.drawable.photo;
-
-    int[] icons = {R.drawable.ic_measure, R.drawable.ic_history, R.drawable.ic_settings};
 
     RecyclerView mRcView;
 
@@ -47,6 +42,8 @@ public class MainActivity extends ActionBarActivity implements
     DrawerLayout drawer;
 
     ActionBarDrawerToggle mDrawerToggle;
+
+    private int page = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,58 +82,38 @@ public class MainActivity extends ActionBarActivity implements
                     @Override
                     public void onItemClick(View view, int position) {
                         switch (position) {
-                            case 3:
-                                startActivity(
-                                        new Intent(MainActivity.this, SettingsActivity.class));
-                                break;
                             case 1:
-                                drawer.closeDrawer(Gravity.LEFT);
+                                if (page != 1) {
+                                    getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.content_frame,
+                                                    MeasureFragment.getInstance()).commit();
+                                    page = 1;
+                                }
                                 break;
                             case 2:
+                                if (page != 2) {
+                                    getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.content_frame,
+                                                    HistoryFragment.getInstance()).commit();
+                                    page = 2;
+                                }
+                                break;
+                            case 3:
+                                if (page != 3) {
+                                    getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.content_frame,
+                                                    new MyPreferenceFragment()).commit();
+                                    page = 3;
+                                }
                                 break;
                             default:
                                 break;
                         }
+                        drawer.closeDrawer(Gravity.LEFT);
                     }
                 }));
-
-        MeasurePagerAdapter mPagerAdapter = new MeasurePagerAdapter(getSupportFragmentManager());
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mPagerAdapter);
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    public class MeasurePagerAdapter extends FragmentPagerAdapter {
-
-        public MeasurePagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            if (position == 0) {
-                return (Fragment) MeasureOneFragment.newInstance(getApplicationContext().getString(
-                        R.string.title_fragment_measure_one));
-            } else {
-                return (Fragment) MeasureSeriesFragment
-                        .newInstance(getApplicationContext().getString(
-                                R.string.title_fragment_measure_series));
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return getItem(position).getArguments().getString("title");
-        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,
+                MeasureFragment.getInstance()).commit();
     }
 
     @Override
@@ -152,5 +129,10 @@ public class MainActivity extends ActionBarActivity implements
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
