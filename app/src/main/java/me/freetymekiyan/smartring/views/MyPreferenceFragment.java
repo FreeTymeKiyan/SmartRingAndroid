@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
+import android.support.v4.preference.PreferenceFragment;
 
 import me.freetymekiyan.smartring.R;
+
+;
 
 public class MyPreferenceFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -61,6 +63,11 @@ public class MyPreferenceFragment extends PreferenceFragment implements
                 pref.setSummary(
                         (text == null || text.isEmpty()) ? getString(R.string.weight_summary)
                                 : text + " " + getString(R.string.weight_unit));
+            } else if (title.equals(getString(R.string.age))) {
+                pref.setSummary(
+                        (text == null || text.isEmpty()) ? getString(R.string.age_summary) : text);
+            } else if (title.equals(getString(R.string.email))) {
+                pref.setSummary(text);
             }
         }
         if (pref instanceof SwitchPreference) {
