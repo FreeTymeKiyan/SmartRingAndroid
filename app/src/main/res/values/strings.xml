@@ -20,9 +20,7 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_fragment_measure_one">One</string>
     <string name="title_fragment_measure_series">Series</string>
-
     <string name="nfc">NFC State</string>
-
     <string name="user">User</string>
     <string name="key_user">key_user</string>
     <string name="reminder">Reminder</string>
@@ -38,9 +36,10 @@
     <string name="female_short">F</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="gender_summary">Specify gender to get correct analysis on heart rate</string>
+    <string name="gender_summary">Enter gender for accurate analysis</string>
     <string name="key_frequency">key_frequency</string>
     <string name="frequency">Frequency</string>
+
     <string-array name="frequency">
         <item>@string/daily</item>
         <item>@string/weekly</item>
@@ -51,6 +50,7 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
@@ -62,5 +62,12 @@
     <string name="key_weight">key_weight</string>
     <string name="weight">Weight</string>
     <string name="weight_unit">lbs</string>
-    <string name="weight_summary">Enter your weight for analysis</string>
+    <string name="weight_summary">Enter weight for accurate analysis</string>
+    <string name="key_age">key_age</string>
+    <string name="age">Age</string>
+    <string name="age_summary">Enter age for accurate analysis</string>
+    <string name="key_email">key_email</string>
+    <string name="email">Email</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -19,6 +19,16 @@
             android:title="@string/gender" />
 
         <EditTextPreference
+            android:inputType="textEmailAddress"
+            android:key="@string/key_email"
+            android:title="@string/email" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="@string/key_age"
+            android:title="@string/age" />
+
+        <EditTextPreference
             android:inputType="number"
             android:key="@string/key_weight"
             android:title="@string/weight" />
