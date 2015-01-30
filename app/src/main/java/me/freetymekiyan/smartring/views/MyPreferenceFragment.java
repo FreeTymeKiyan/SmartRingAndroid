@@ -51,7 +51,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements
     void updatePreference(Preference pref) {
         if (pref instanceof ListPreference) {
             ListPreference listPref = (ListPreference) pref;
-            pref.setSummary(listPref.getEntry().toString());
+            listPref.setSummary(listPref.getEntry() != null ? listPref.getEntry() : getString(R.string.daily));
         }
         if (pref instanceof EditTextPreference) {
             String title = pref.getTitle().toString();
