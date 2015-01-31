@@ -1,5 +1,7 @@
 package me.freetymekiyan.smartring.views;
 
+import com.skyfishjy.library.RippleBackground;
+
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -9,14 +11,17 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import me.freetymekiyan.smartring.R;
 
 
-public class MeasureActivity extends ActionBarActivity {
+public class MeasureActivity extends ActionBarActivity implements View.OnClickListener {
 
     public static final int START_INDEX = 3;
 
@@ -30,12 +35,24 @@ public class MeasureActivity extends ActionBarActivity {
 
     private int count = 0;
 
+    private float sum;
+
+    private RippleBackground rippleBkg;
+
+    private ImageView ivPhone;
+
+    private TextView tvState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_measure);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
 
-        tvNfc = (TextView) findViewById(R.id.tv_textview);
+        tvNfc = (TextView) findViewById(R.id.tv_pulse);
+        rippleBkg = (RippleBackground) findViewById(R.id.rbkg_measure);
+        rippleBkg.startRippleAnimation();
 
         mAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mAdapter == null) {
@@ -54,6 +71,10 @@ public class MeasureActivity extends ActionBarActivity {
             throw new RuntimeException("fail", e);
         }
         mIntentFilters = new IntentFilter[]{ndef,};
+
+        ivPhone = (ImageView) findViewById(R.id.centerImage);
+        ivPhone.setOnClickListener(this);
+        tvState = (TextView) findViewById(R.id.tv_nfc_state);
     }
 
     @Override
@@ -74,8 +95,16 @@ public class MeasureActivity extends ActionBarActivity {
                 String msg = new String(msgs[i].getRecords()[0].getPayload());
                 Log.d("DEBUG", "msg: " + msg);
                 if (!msg.equals("\u0003me.freetymekiyan.smartring")) {
-                    float rate = Float.valueOf(msg.substring(START_INDEX, START_INDEX + 4)) * 8192 / 8000000;
-                    tvNfc.setText("rate: " + (60 / rate) + " count: " + count++);
+                    if (count <= 10 && isReceiving()) {
+                        float rate =
+                                Float.valueOf(msg.substring(START_INDEX, START_INDEX + 4)) * 8192
+                                        / 8000000;
+                        tvNfc.setText("rate: " + (60 / rate) + " count: " + count++);
+                        sum += 60 / rate;
+                    } else {
+                        stopUpdateNfc();
+                        tvNfc.setText("Heart Rate: " + (sum / count));
+                    }
                 }
             }
         }
@@ -92,5 +121,36 @@ public class MeasureActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
         mAdapter.disableForegroundDispatch(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.centerImage:
+                if (isReceiving()) {
+                    stopUpdateNfc();
+                } else {
+                    startUpdateNfc();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void stopUpdateNfc() {
+        rippleBkg.stopRippleAnimation();
+        tvState.setText(isReceiving() + "");
+    }
+
+    private void startUpdateNfc() {
+        sum = 0;
+        count = 0;
+        rippleBkg.startRippleAnimation();
+        tvState.setText(isReceiving() + "");
+    }
+
+    private boolean isReceiving() {
+        return rippleBkg.isRippleAnimationRunning();
     }
 }

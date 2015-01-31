@@ -20,7 +20,8 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_fragment_measure_one">One</string>
     <string name="title_fragment_measure_series">Series</string>
-    <string name="nfc">NFC State</string>
+    <string name="tv_pulse">Pulse and Count</string>
+    <string name="nfc_state">NFC State</string>
     <string name="user">User</string>
     <string name="key_user">key_user</string>
     <string name="reminder">Reminder</string>
