@@ -19,7 +19,7 @@ public final class PulseContract {
 
         public static final String COLUMN_NAME_STATE = "state";
 
-        public static final String COLUMN_NAME_MEASURED_TIME = "measured_time";
+        public static final String COLUMN_NAME_MEASURED_TIMESTAMP = "measured_timestamp";
 
         public static final String COLUMN_NAME_MEASURED_DATE = "measured_date";
     }

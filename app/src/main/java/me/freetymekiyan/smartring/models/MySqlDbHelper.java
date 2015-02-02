@@ -24,7 +24,8 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
             + PulseEntry.COLUMN_NAME_VALUE + " INTEGER, "
             + PulseEntry.COLUMN_NAME_STATE + " INTEGER, "
             + PulseEntry.COLUMN_NAME_MEASURED_DATE + " DATETIME DEFAULT CURRENT_DATE, "
-            + PulseEntry.COLUMN_NAME_MEASURED_TIME + " DATETIME DEFAULT CURRENT_TIME" +
+            + PulseEntry.COLUMN_NAME_MEASURED_TIMESTAMP
+            + " DATETIME DEFAULT (datetime('now','localtime'))" +
             ")";
 
     private static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + PulseEntry.TABLE_NAME;
@@ -87,7 +88,7 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
             String date = c
                     .getString(c.getColumnIndexOrThrow(PulseEntry.COLUMN_NAME_MEASURED_DATE));
             String time = c
-                    .getString(c.getColumnIndexOrThrow(PulseEntry.COLUMN_NAME_MEASURED_TIME));
+                    .getString(c.getColumnIndexOrThrow(PulseEntry.COLUMN_NAME_MEASURED_TIMESTAMP));
             res.append(id);
             res.append('\t');
             res.append(rate);
