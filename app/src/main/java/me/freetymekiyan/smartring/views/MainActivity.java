@@ -125,7 +125,10 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_db) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, new TestDbFragment()).commit();
+            page = 0;
             return true;
         }
         return super.onOptionsItemSelected(item);

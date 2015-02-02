@@ -3,7 +3,7 @@
 
     <string name="app_name">SmartRing</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_db">Database</string>
     <string name="open_drawer">Open</string>
     <string name="close_drawer">Close</string>
     <string name="measure">Measure</string>
