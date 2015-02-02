@@ -46,7 +46,7 @@
             android:key="@string/key_frequency"
             android:title="@string/frequency" />
 
-        <Preference
+        <me.freetymekiyan.smartring.preferences.TimePickerPreference
             android:key="@string/key_time"
             android:title="@string/time" />
 
