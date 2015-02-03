@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/rbkg_measure"
-        app:rb_color="#0099CC"
+        app:rb_color="@color/BlueBkg"
         app:rb_radius="32dp"
         app:rb_rippleAmount="4"
         app:rb_duration="3000"

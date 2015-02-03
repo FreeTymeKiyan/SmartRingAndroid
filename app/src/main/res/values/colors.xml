@@ -9,5 +9,6 @@
     <color name="PrimaryText">#212121</color>
     <color name="SecondaryText">#727272</color>
     <color name="DividerColor">#B6B6B6</color>
+    <color name="BlueBkg">#0099CC</color>
 
 </resources>
