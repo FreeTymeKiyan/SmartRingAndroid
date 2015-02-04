@@ -55,7 +55,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         mChart.setDrawHorizontalGrid(false);
         mChart.setDrawYValues(true);
         generateDataSet();
-        mChart.animateXY(3000, 3000);
+        mChart.animateXY(1500, 1500);
         return view;
     }
 
