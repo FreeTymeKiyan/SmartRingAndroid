@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.freetymekiyan.smartring.models.PulseContract.PulseEntry;
 
 /**
@@ -65,16 +68,30 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
         return rowId;
     }
 
+    public List<Pulse> getLast7Days() {
+        // SELECT date, avg(value), state
+        // FROM table_name
+        // WHERE date >= date('now', 'weekday 0', '-7 days')
+        // GROUP BY date, state
+        List<Pulse> res = new ArrayList<Pulse>();
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = {
+                PulseEntry._ID,
+                PulseEntry.COLUMN_NAME_VALUE,
+                PulseEntry.COLUMN_NAME_STATE,
+                PulseEntry.COLUMN_NAME_MEASURED_DATE,
+        };
+        String selection = "WHERE " + PulseEntry.COLUMN_NAME_MEASURED_DATE + " >= ?";
+        String[] selectionArgs = new String[]{"DATE('now', 'weekday 0', '-7 days')"};
+        String groupBy = PulseEntry.COLUMN_NAME_MEASURED_DATE;
+        String orderBy = PulseEntry.COLUMN_NAME_MEASURED_DATE + " ASC";
+        db.query(PulseEntry.TABLE_NAME, projection, selection, selectionArgs, groupBy, null,
+                orderBy);
+        return res;
+    }
+
     public String getAllPulses() {
         SQLiteDatabase db = getWritableDatabase();
-//        String[] projection = {
-//                PulseEntry._ID,
-//                PulseEntry.COLUMN_NAME_VALUE,
-//                PulseEntry.COLUMN_NAME_STATE,
-//                PulseEntry.COLUMN_NAME_MEASURED_DATE,
-//                PulseEntry.COLUMN_NAME_MEASURED_TIME
-//        };
-
         String sortOrder = PulseEntry.COLUMN_NAME_MEASURED_DATE + " ASC";
 
         Cursor c = db.query(PulseEntry.TABLE_NAME, null, null, null, null, null, sortOrder);
