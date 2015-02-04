@@ -7,7 +7,10 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
+import android.support.annotation.Nullable;
 import android.support.v4.preference.PreferenceFragment;
+import android.util.Log;
+import android.view.View;
 
 import me.freetymekiyan.smartring.R;
 
@@ -25,6 +28,20 @@ public class MyPreferenceFragment extends PreferenceFragment implements
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_general);
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Preference prefAbout = findPreference(getString(R.string.key_about));
+        prefAbout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Log.d("DEBUG", "About Clicked");
+                return true;
+            }
+        });
     }
 
     @Override
