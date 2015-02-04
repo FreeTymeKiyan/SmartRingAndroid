@@ -40,6 +40,9 @@
     <string name="gender_summary">Enter gender for accurate analysis</string>
     <string name="key_frequency">key_frequency</string>
     <string name="frequency">Frequency</string>
+    <string name="key_about">about</string>
+    <string name="key_faq">faq</string>
+    <string name="key_feedback">feedback</string>
 
     <string-array name="frequency">
         <item>@string/daily</item>

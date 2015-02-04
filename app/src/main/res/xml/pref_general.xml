@@ -53,9 +53,9 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/about_us">
-        <Preference android:title="@string/about"></Preference>
-        <Preference android:title="@string/faq"></Preference>
-        <Preference android:title="@string/feedback"></Preference>
+        <Preference android:title="@string/about" android:key="@string/key_about"></Preference>
+        <Preference android:title="@string/faq" android:key="@string/key_faq"></Preference>
+        <Preference android:title="@string/feedback" android:key="@string/key_feedback"></Preference>
 
     </PreferenceCategory>
 
