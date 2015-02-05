@@ -8,6 +8,7 @@
 //Heartbeat count values
 unsigned char getNewPulse = 0;
 unsigned short pulseTimerCounter = 0;
+unsigned short pulseCount = 0;
 //NFC values
 unsigned char into_fired = 0;
 unsigned char NDEF_Application_Data[] = RF430_APP_DATA;
@@ -47,9 +48,9 @@ void setup() {
 	P2DIR = (unsigned char) (0xFF & ~(BIT4));
 	P2REN = (unsigned char) (0xFF);
 	//Configure the P2 interrupt:
-	P2IE = (unsigned char) (0x00 | BIT4);
-	P2IFG &= ~(BIT4); //Clear interrupt flag
-	P2IES |= BIT4; //Set interrupt trigger as high-to-low transition, since INTO will be setup active low below
+	P2IE = (unsigned char) (0x00);
+	//P2IFG &= ~(BIT4); //Clear interrupt flag
+	//P2IES |= BIT4; //Set interrupt trigger as high-to-low transition, since INTO will be setup active low below
 
 	_enable_interrupt();
 	__bis_SR_register(GIE);
@@ -72,14 +73,16 @@ int main(void) {
 		Write_Register(CONTROL_REG, RF_ENABLE);
 		__delay_cycles(4000000);
 		status = Read_Register(STATUS_REG);
+		pulseTimerCounter = 0;
 		while (status & RF_BUSY) {
 			P1OUT ^= BIT0;
 			status = Read_Register(STATUS_REG);
+			if (pulseTimerCounter > 5000) pulseTimerCounter = 0;
 			if (getNewPulse) {
 				getNewPulse = 0;
-				unsigned short data = pulseTimerCounter;
-				pulseTimerCounter = 0;
-				Write_Register(CONTROL_REG, 0);
+				unsigned short data = pulseCount;
+				//Write_Register(CONTROL_REG, 0);
+				Write_Register(CONTROL_REG, SW_RESET);
 				__delay_cycles(4000000);
 				NDEF_Application_Data2[35] = (data / 1000) + 0x30;
 				NDEF_Application_Data2[36] = ((data % 1000) / 100) + 0x30;
@@ -92,7 +95,8 @@ int main(void) {
 				__delay_cycles(1000000);
 			}
 		}
-		Write_Register(CONTROL_REG, 0);
+		//Write_Register(CONTROL_REG, 0);
+		Write_Register(CONTROL_REG, SW_RESET);
 		__delay_cycles(4000000);
 	}
 	return 0;
@@ -108,16 +112,17 @@ __interrupt void Port1_ISR(void) {
 	if (P1IFG & BIT3) {
 		//get the heartbeat pulses
 		getNewPulse = 1;
+		pulseCount = pulseTimerCounter;
+		pulseTimerCounter = 0;
 		P1IFG &= ~(BIT3); //clear interrupt flag
 	}
 }
-
+/*
 #pragma vector=PORT2_VECTOR
 __interrupt void PORT2_ISR(void) {
 	//INTO interrupt fired
 	if (P2IFG & BIT4) {
-		into_fired = 1;
 		P2IFG &= ~(BIT4); //clear interrupt flag
 	}
-}
+}*/
 

@@ -40,7 +40,7 @@ void Write_Register_BIP8(unsigned int reg_addr, unsigned int value);
 #define EOR_INT_ENABLE		BIT1
 #define EOW_INT_ENABLE		BIT2
 #define CRC_INT_ENABLE		BIT3
-#define BIP8_ERROR_INT_ENABLE		BIT4
+#define BIP8_ERROR_INT_ENABLE	BIT4
 #define NDEF_ERROR_INT_ENABLE	BIT5
 #define GENERIC_ERROR_INT_ENABLE	BIT7
 //INT_FLAG_REG bits
