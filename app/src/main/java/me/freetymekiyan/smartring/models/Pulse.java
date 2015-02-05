@@ -11,7 +11,7 @@ import java.util.Locale;
  */
 public class Pulse {
 
-    private static final String SQLITE_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String SQLITE_DATE_FORMAT = "yyyy-MM-dd";
 
     public enum State {
         REST,

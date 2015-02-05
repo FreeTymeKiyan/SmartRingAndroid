@@ -14,19 +14,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import me.freetymekiyan.smartring.R;
+import me.freetymekiyan.smartring.models.MySqlDbHelper;
+import me.freetymekiyan.smartring.models.Pulse;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HistoryFragment extends Fragment implements OnChartValueSelectedListener {
 
+    private static final String X_VAL_FORMAT = "MM/dd";
+
     private static HistoryFragment instance;
 
     private BarChart mChart;
+
+    private MySqlDbHelper db;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -39,6 +50,11 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         return instance;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        db = new MySqlDbHelper(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +76,53 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
     }
 
     private void generateDataSet() {
+        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<BarEntry> rest = new ArrayList<BarEntry>();
+        ArrayList<BarEntry> active = new ArrayList<BarEntry>();
+
+        final Calendar c = Calendar.getInstance();
+        final Calendar c2 = Calendar.getInstance();
+        c.clear();
+        c.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH), c2.get(Calendar.DAY_OF_MONTH));
+        c.add(Calendar.DATE, -6); // 7 days ago
+        final DateFormat format = new SimpleDateFormat(X_VAL_FORMAT, Locale.ENGLISH);
+
+        final List<Pulse> rawRest = db.getLast7DaysRest();
+        final List<Pulse> rawActive = db.getLast7DaysActive();
+        for (int i = 0; i < 7; i++) {
+            xVals.add(format.format(c.getTime()));
+
+            Pulse p = new Pulse();
+            p.setDate(c.getTime());
+            if (rawRest.contains(p)) {
+                rest.add(new BarEntry(rawRest.get(rawRest.indexOf(p)).getValue(), i));
+            } else {
+                rest.add(new BarEntry(0, i));
+            }
+            if (rawActive.contains(p)) {
+                active.add(new BarEntry(rawActive.get(rawActive.indexOf(p)).getValue(), i));
+            } else {
+                active.add(new BarEntry(0, i));
+            }
+
+            c.add(Calendar.DATE, 1);
+        }
+
+        BarDataSet set1 = new BarDataSet(rest, getString(R.string.rest));
+        set1.setColor(getResources().getColor(R.color.BlueBkg));
+        BarDataSet set2 = new BarDataSet(active, getString(R.string.active));
+        set2.setColor(getResources().getColor(R.color.AccentColor));
+
+        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(set1);
+        dataSets.add(set2);
+
+        BarData data = new BarData(xVals, dataSets);
+        data.setGroupSpace(110f);
+        mChart.setData(data);
+    }
+
+    private void generateTestDataSet() {
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < 7; i++) {
             xVals.add(i + "");

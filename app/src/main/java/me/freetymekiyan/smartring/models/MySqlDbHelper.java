@@ -68,7 +68,15 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
         return rowId;
     }
 
-    public List<Pulse> getLast7Days() {
+    public List<Pulse> getLast7DaysRest() {
+        return getLast7Days(Pulse.State.REST);
+    }
+
+    public List<Pulse> getLast7DaysActive() {
+        return getLast7Days(Pulse.State.ACTIVE);
+    }
+
+    public List<Pulse> getLast7Days(Pulse.State s) {
         List<Pulse> res = new ArrayList<Pulse>();
         SQLiteDatabase db = getReadableDatabase();
 
@@ -77,7 +85,7 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
                 "AVG(" + PulseEntry.COL_NAME_VAL + ")" + " AS " + PulseEntry.COL_NAME_AVG_VAL,
         };
         String selection = PulseEntry.COL_NAME_STATE + "=?";
-        String[] selectionArgs = new String[]{"0"};
+        String[] selectionArgs = new String[]{s.ordinal() + ""};
         String groupBy = PulseEntry.COL_NAME_MEASURED_DATE;
         String having = PulseEntry.COL_NAME_MEASURED_DATE
                 + " >= DATE('now', 'weekday 0', '-7 days')";
@@ -87,12 +95,14 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
                 having, orderBy);
         c.moveToFirst();
         while (!c.isAfterLast()) {
-            String date = c
-                    .getString(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_MEASURED_DATE));
+            String date = c.getString(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_MEASURED_DATE));
             int value = c.getInt(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_AVG_VAL));
             Pulse p = new Pulse(value, date, Pulse.State.REST);
             res.add(p);
             c.moveToNext();
+        }
+        if (c != null && !c.isClosed()) {
+            c.close();
         }
         return res;
     }
