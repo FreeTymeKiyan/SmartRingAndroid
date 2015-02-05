@@ -75,6 +75,9 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         return view;
     }
 
+    /**
+     * Read last 7 days data from database
+     */
     private void generateDataSet() {
         ArrayList<String> xVals = new ArrayList<String>();
         ArrayList<BarEntry> rest = new ArrayList<BarEntry>();
@@ -102,7 +105,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
             if (rawActive.contains(p)) {
                 active.add(new BarEntry(rawActive.get(rawActive.indexOf(p)).getValue(), i));
             } else {
-                active.add(new BarEntry(0, i));
+                active.add(new BarEntry(0, i)); // insert 0 if no measurement for that day
             }
 
             c.add(Calendar.DATE, 1);
@@ -122,6 +125,9 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         mChart.setData(data);
     }
 
+    /**
+     * Generate test data for the graph
+     */
     private void generateTestDataSet() {
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < 7; i++) {
