@@ -7,6 +7,8 @@ import android.provider.BaseColumns;
  */
 public final class PulseContract {
 
+
+
     public PulseContract() {
     }
 
@@ -15,12 +17,14 @@ public final class PulseContract {
 
         public static final String TABLE_NAME = "pulse_rate";
 
-        public static final String COLUMN_NAME_VALUE = "value";
+        public static final String COL_NAME_VAL = "value";
 
-        public static final String COLUMN_NAME_STATE = "state";
+        public static final String COL_NAME_STATE = "state";
 
-        public static final String COLUMN_NAME_MEASURED_TIMESTAMP = "measured_timestamp";
+        public static final String COL_NAME_MEASURED_TIMESTAMP = "measured_timestamp";
 
-        public static final String COLUMN_NAME_MEASURED_DATE = "measured_date";
+        public static final String COL_NAME_MEASURED_DATE = "measured_date";
+
+        public static final String COL_NAME_AVG_VAL = "avgValue";
     }
 }

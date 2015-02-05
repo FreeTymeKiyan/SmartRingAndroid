@@ -24,10 +24,10 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TABLE = "CREATE TABLE "
             + PulseEntry.TABLE_NAME + "("
             + PulseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + PulseEntry.COLUMN_NAME_VALUE + " INTEGER, "
-            + PulseEntry.COLUMN_NAME_STATE + " INTEGER, "
-            + PulseEntry.COLUMN_NAME_MEASURED_DATE + " DATETIME DEFAULT CURRENT_DATE, "
-            + PulseEntry.COLUMN_NAME_MEASURED_TIMESTAMP
+            + PulseEntry.COL_NAME_VAL + " INTEGER, "
+            + PulseEntry.COL_NAME_STATE + " INTEGER, "
+            + PulseEntry.COL_NAME_MEASURED_DATE + " DATETIME DEFAULT CURRENT_DATE, "
+            + PulseEntry.COL_NAME_MEASURED_TIMESTAMP
             + " DATETIME DEFAULT (datetime('now','localtime'))" +
             ")";
 
@@ -58,8 +58,8 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
     public long addPulseRate(int rate, int state) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(PulseEntry.COLUMN_NAME_VALUE, rate);
-        values.put(PulseEntry.COLUMN_NAME_STATE, state);
+        values.put(PulseEntry.COL_NAME_VAL, rate);
+        values.put(PulseEntry.COL_NAME_STATE, state);
         // Insert the new row, returning the primary key value of the new row
         long rowId = db.insert(PulseEntry.TABLE_NAME, null, values);
         if (rowId == -1) {
@@ -69,43 +69,50 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
     }
 
     public List<Pulse> getLast7Days() {
-        // SELECT date, avg(value), state
-        // FROM table_name
-        // WHERE date >= date('now', 'weekday 0', '-7 days')
-        // GROUP BY date, state
         List<Pulse> res = new ArrayList<Pulse>();
         SQLiteDatabase db = getReadableDatabase();
+
         String[] projection = {
-                PulseEntry._ID,
-                PulseEntry.COLUMN_NAME_VALUE,
-                PulseEntry.COLUMN_NAME_STATE,
-                PulseEntry.COLUMN_NAME_MEASURED_DATE,
+                PulseEntry.COL_NAME_MEASURED_DATE,
+                "AVG(" + PulseEntry.COL_NAME_VAL + ")" + " AS " + PulseEntry.COL_NAME_AVG_VAL,
         };
-        String selection = "WHERE " + PulseEntry.COLUMN_NAME_MEASURED_DATE + " >= ?";
-        String[] selectionArgs = new String[]{"DATE('now', 'weekday 0', '-7 days')"};
-        String groupBy = PulseEntry.COLUMN_NAME_MEASURED_DATE;
-        String orderBy = PulseEntry.COLUMN_NAME_MEASURED_DATE + " ASC";
-        db.query(PulseEntry.TABLE_NAME, projection, selection, selectionArgs, groupBy, null,
-                orderBy);
+        String selection = PulseEntry.COL_NAME_STATE + "=?";
+        String[] selectionArgs = new String[]{"0"};
+        String groupBy = PulseEntry.COL_NAME_MEASURED_DATE;
+        String having = PulseEntry.COL_NAME_MEASURED_DATE
+                + " >= DATE('now', 'weekday 0', '-7 days')";
+        String orderBy = PulseEntry.COL_NAME_MEASURED_DATE + " ASC";
+
+        Cursor c = db.query(PulseEntry.TABLE_NAME, projection, selection, selectionArgs, groupBy,
+                having, orderBy);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            String date = c
+                    .getString(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_MEASURED_DATE));
+            int value = c.getInt(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_AVG_VAL));
+            Pulse p = new Pulse(value, date, Pulse.State.REST);
+            res.add(p);
+            c.moveToNext();
+        }
         return res;
     }
 
     public String getAllPulses() {
         SQLiteDatabase db = getWritableDatabase();
-        String sortOrder = PulseEntry.COLUMN_NAME_MEASURED_DATE + " ASC";
+        String sortOrder = PulseEntry.COL_NAME_MEASURED_DATE + " ASC";
 
         Cursor c = db.query(PulseEntry.TABLE_NAME, null, null, null, null, null, sortOrder);
         c.moveToFirst();
         StringBuilder res = new StringBuilder();
         while (!c.isAfterLast()) {
             long id = c.getLong(c.getColumnIndexOrThrow(PulseEntry._ID));
-            int rate = c.getInt(c.getColumnIndexOrThrow(PulseEntry.COLUMN_NAME_VALUE));
-            String state = c.getInt(c.getColumnIndexOrThrow(PulseEntry.COLUMN_NAME_STATE)) == 0
+            int rate = c.getInt(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_VAL));
+            String state = c.getInt(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_STATE)) == 0
                     ? "static" : "workout";
             String date = c
-                    .getString(c.getColumnIndexOrThrow(PulseEntry.COLUMN_NAME_MEASURED_DATE));
+                    .getString(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_MEASURED_DATE));
             String time = c
-                    .getString(c.getColumnIndexOrThrow(PulseEntry.COLUMN_NAME_MEASURED_TIMESTAMP));
+                    .getString(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_MEASURED_TIMESTAMP));
             res.append(id);
             res.append('\t');
             res.append(rate);
@@ -119,7 +126,7 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
             res.append('\n');
             c.moveToNext();
         }
-        if (!c.isClosed()) {
+        if (c != null && !c.isClosed()) {
             c.close();
         }
         return res.toString();

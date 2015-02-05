@@ -3,16 +3,21 @@ package me.freetymekiyan.smartring.views;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 
 import me.freetymekiyan.smartring.R;
 import me.freetymekiyan.smartring.models.MySqlDbHelper;
+import me.freetymekiyan.smartring.models.Pulse;
 
 public class TestDbFragment extends Fragment implements View.OnClickListener {
 
@@ -72,7 +77,28 @@ public class TestDbFragment extends Fragment implements View.OnClickListener {
                 tvValues.setText(mDbHelper.getAllPulses());
                 break;
             case R.id.btn_update:
-
+                List<Pulse> list = mDbHelper.getLast7Days();
+                final Calendar c = Calendar.getInstance();
+                final Calendar c2 = Calendar.getInstance();
+                c.clear();
+                c.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH), c2.get(Calendar.DAY_OF_MONTH));
+                c.add(Calendar.DATE, -6);
+                ArrayList<Pulse> added = new ArrayList<>();
+                for (int i = 0; i < 7; i++) {
+                    Pulse p = new Pulse();
+                    p.setDate(c.getTime());
+                    if (!list.contains(p)) {
+                        p.setValue(0);
+                        p.setState(Pulse.State.REST);
+                        added.add(p);
+                    } else {
+                        added.add(list.get(list.indexOf(p)));
+                    }
+                    c.add(Calendar.DATE, 1);
+                }
+                for (Pulse p : added) {
+                    Log.d("DEBUG", p.getDate().toString() + " : " + p.getValue() + " | " + p.getState());
+                }
                 break;
             case R.id.btn_delete:
 
