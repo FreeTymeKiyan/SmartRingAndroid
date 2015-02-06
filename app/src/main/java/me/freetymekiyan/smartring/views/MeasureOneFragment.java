@@ -3,27 +3,21 @@ package me.freetymekiyan.smartring.views;
 import com.skyfishjy.library.RippleBackground;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import de.greenrobot.event.EventBus;
 import me.freetymekiyan.smartring.R;
-import me.freetymekiyan.smartring.controllers.OnFragmentInteractionListener;
+import me.freetymekiyan.smartring.controllers.MeasureEvent;
 
+public class MeasureOneFragment extends Fragment implements View.OnClickListener {
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MeasureOneFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MeasureOneFragment extends Fragment {
+    private RippleBackground rippleBkg;
 
     public String getTitle() {
         return title;
@@ -31,7 +25,12 @@ public class MeasureOneFragment extends Fragment {
 
     private String title;
 
-    private OnFragmentInteractionListener mListener;
+    private OnMeasureListener mListener;
+
+    public interface OnMeasureListener {
+
+        public void onMeasureStateChanged(boolean enabled);
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -65,27 +64,15 @@ public class MeasureOneFragment extends Fragment {
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_measure_one, container, false);
-        final RippleBackground rippleBackground = (RippleBackground) view.findViewById(
-                R.id.rbkg_measure);
+        rippleBkg = (RippleBackground) view.findViewById(R.id.rbkg_measure);
         ImageView imageView = (ImageView) view.findViewById(R.id.centerImage);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (rippleBackground.isRippleAnimationRunning()) {
-                    rippleBackground.stopRippleAnimation();
-                } else {
-                    rippleBackground.startRippleAnimation();
-                }
-
-            }
-        });
+        imageView.setOnClickListener(this);
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onNFCStateChanged(boolean enabled) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onMeasureStateChanged(enabled);
         }
     }
 
@@ -93,17 +80,57 @@ public class MeasureOneFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnMeasureListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        EventBus.getDefault().register(this);
     }
+
+    public void onEvent(MeasureEvent event){
+        Toast.makeText(getActivity(), event.message, Toast.LENGTH_SHORT).show();
+        stopUpdateNfc();
+    }
+
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.centerImage:
+                if (isReceiving()) {
+                    stopUpdateNfc();
+
+                } else {
+                    startUpdateNfc();
+
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void stopUpdateNfc() {
+        rippleBkg.stopRippleAnimation();
+        onNFCStateChanged(false);
+    }
+
+    private void startUpdateNfc() {
+        rippleBkg.startRippleAnimation();
+        onNFCStateChanged(true);
+//        sum = 0;
+//        count = 0;
+    }
+
+    private boolean isReceiving() {
+        return rippleBkg.isRippleAnimationRunning();
+    }
 }
