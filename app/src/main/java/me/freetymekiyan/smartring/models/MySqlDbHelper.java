@@ -26,13 +26,12 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
             + PulseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + PulseEntry.COL_NAME_VAL + " INTEGER, "
             + PulseEntry.COL_NAME_STATE + " INTEGER, "
-            + PulseEntry.COL_NAME_MEASURED_DATE + " DATETIME DEFAULT CURRENT_DATE, "
+            + PulseEntry.COL_NAME_MEASURED_DATE + " DATETIME DEFAULT (date('now','localtime')), "
             + PulseEntry.COL_NAME_MEASURED_TIMESTAMP
             + " DATETIME DEFAULT (datetime('now','localtime'))" +
             ")";
 
     private static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + PulseEntry.TABLE_NAME;
-
 
     public MySqlDbHelper(Context context) {
         super(context, DB_NAME, null, VER);

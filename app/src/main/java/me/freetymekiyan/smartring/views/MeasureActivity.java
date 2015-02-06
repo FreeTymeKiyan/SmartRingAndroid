@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import me.freetymekiyan.smartring.R;
 
-
 public class MeasureActivity extends ActionBarActivity implements View.OnClickListener {
 
     public static final int START_INDEX = 3;
