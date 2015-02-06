@@ -56,11 +56,9 @@ public class MeasureFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return (Fragment) MeasureOneFragment
-                        .newInstance(getString(R.string.title_fragment_measure_one));
+                return (Fragment) MeasureOneFragment.newInstance(getString(R.string.title_fragment_measure_one));
             } else {
-                return (Fragment) MeasureSeriesFragment.newInstance(
-                        getString(R.string.title_fragment_measure_series));
+                return (Fragment) MeasureSeriesFragment.newInstance(getString(R.string.title_fragment_measure_series));
             }
         }
 
