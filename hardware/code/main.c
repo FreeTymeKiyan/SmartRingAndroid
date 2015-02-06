@@ -29,7 +29,7 @@ void setup() {
 	P1DIR = (unsigned char) (0xFF & (~BIT3)); //P1.3 input and others output
 	P1REN = (unsigned char) (0xFF & (~BIT0) & (~BIT6) & (~BIT7)); //P1.0 pull up/down resistor disable for LED output, and P1.6 P1.7 disable for I2C.
 	//Configure the P1 interrupt: Enable the P1.3 interrupt for signal input
-	P1IE = (unsigned char) (0x00 | BIT3);
+	P1IE = (unsigned char) (0x00);
 	P1IFG &= ~(BIT3); //Clear interrupt flag
 	P1IES &= ~(BIT3); //Set interrupt trigger as low-to-high transition, since INTO will be setup active low below
 
@@ -66,15 +66,23 @@ void setup() {
 
 int main(void) {
 	unsigned short status = 0;
+	unsigned char Open_app_signal = 0;
+	unsigned char IE_heartbeat = 0;
 	setup();
 
 	while (1) {
 		Write_Continuous(0, NDEF_Application_Data, 59);
 		Write_Register(CONTROL_REG, RF_ENABLE);
 		__delay_cycles(4000000);
+
 		status = Read_Register(STATUS_REG);
 		pulseTimerCounter = 0;
 		while (status & RF_BUSY) {
+			if (!IE_heartbeat) {
+				P1IE |= BIT3;
+				P1IFG &= ~(BIT3);
+				IE_heartbeat = 1;
+			}
 			P1OUT ^= BIT0;
 			status = Read_Register(STATUS_REG);
 			if (pulseTimerCounter > 5000) pulseTimerCounter = 0;
@@ -94,6 +102,11 @@ int main(void) {
 			} else {
 				__delay_cycles(1000000);
 			}
+		}
+		if (IE_heartbeat) {
+			P1IE &= ~(BIT3);
+			P1IFG &= ~(BIT3);
+			IE_heartbeat = 0;
 		}
 		//Write_Register(CONTROL_REG, 0);
 		Write_Register(CONTROL_REG, SW_RESET);
