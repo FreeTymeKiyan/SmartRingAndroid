@@ -50,10 +50,13 @@
         <item>@string/monthly</item>
     </string-array>
     <string-array name="frequency_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
+        <item>@string/freq_daily</item>
+        <item>@string/freq_weekly</item>
+        <item>@string/freq_monthly</item>
     </string-array>
+    <string name="freq_daily">0</string>
+    <string name="freq_weekly">1</string>
+    <string name="freq_monthly">2</string>
 
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>

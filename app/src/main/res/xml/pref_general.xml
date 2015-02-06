@@ -40,7 +40,7 @@
         android:title="@string/reminder">
 
         <ListPreference
-            android:defaultValue="@string/daily"
+            android:defaultValue="@string/freq_daily"
             android:entries="@array/frequency"
             android:entryValues="@array/frequency_values"
             android:key="@string/key_frequency"
