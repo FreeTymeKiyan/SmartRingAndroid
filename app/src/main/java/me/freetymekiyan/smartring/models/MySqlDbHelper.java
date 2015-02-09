@@ -5,10 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 import me.freetymekiyan.smartring.models.PulseContract.PulseEntry;
 
@@ -39,13 +43,13 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("DEBUG", SQL_CREATE_TABLE);
+//        Log.d("DEBUG", SQL_CREATE_TABLE);
         db.execSQL(SQL_CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d("DEBUG", SQL_DELETE_TABLE);
+//        Log.d("DEBUG", SQL_DELETE_TABLE);
         db.execSQL(SQL_DELETE_TABLE);
     }
 
@@ -55,14 +59,24 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
     }
 
     public long addPulseRate(int rate, int state) {
+        return addPulseRateWithDate(rate, state, null);
+    }
+
+    public long addPulseRateWithDate(int rate, int state, Date date) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(PulseEntry.COL_NAME_VAL, rate);
         values.put(PulseEntry.COL_NAME_STATE, state);
+        if (date != null) {
+            final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            values.put(PulseEntry.COL_NAME_MEASURED_DATE, df.format(date));
+            final SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            values.put(PulseEntry.COL_NAME_MEASURED_TIMESTAMP, df2.format(date));
+        }
         // Insert the new row, returning the primary key value of the new row
         long rowId = db.insert(PulseEntry.TABLE_NAME, null, values);
         if (rowId == -1) {
-            Log.d("DEBUG", "addPulseRate failed");
+//            Log.d("DEBUG", "addPulseRate failed");
         }
         return rowId;
     }
@@ -87,7 +101,7 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
         String[] selectionArgs = new String[]{s.ordinal() + ""};
         String groupBy = PulseEntry.COL_NAME_MEASURED_DATE;
         String having = PulseEntry.COL_NAME_MEASURED_DATE
-                + " >= DATE('now', 'weekday 0', '-7 days')";
+                + " >= DATE('now', '-7 days')";
         String orderBy = PulseEntry.COL_NAME_MEASURED_DATE + " ASC";
 
         Cursor c = db.query(PulseEntry.TABLE_NAME, projection, selection, selectionArgs, groupBy,
@@ -96,6 +110,7 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
         while (!c.isAfterLast()) {
             String date = c.getString(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_MEASURED_DATE));
             int value = c.getInt(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_AVG_VAL));
+//            Log.d("DEBUG", "date: " + date);
             Pulse p = new Pulse(value, date, Pulse.State.REST);
             res.add(p);
             c.moveToNext();
@@ -139,5 +154,21 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
             c.close();
         }
         return res.toString();
+    }
+
+    public void addLast7Days() {
+        final Random r = new Random();
+        final Calendar c = Calendar.getInstance();
+        final Calendar c2 = Calendar.getInstance();
+        c.clear();
+        c.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH), c2.get(Calendar.DAY_OF_MONTH));
+        c.add(Calendar.DATE, -6);
+        for (int i = 0; i < 7; i++) {
+            int rate = 50 + r.nextInt(41);
+            addPulseRateWithDate(rate, Pulse.State.REST.ordinal(), c.getTime());
+            rate = 120 + r.nextInt(41);
+            addPulseRateWithDate(rate, Pulse.State.ACTIVE.ordinal(), c.getTime());
+            c.add(Calendar.DATE, 1);
+        }
     }
 }
