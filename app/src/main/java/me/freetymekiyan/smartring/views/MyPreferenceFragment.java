@@ -12,7 +12,9 @@ import android.support.v4.preference.PreferenceFragment;
 import android.util.Log;
 import android.view.View;
 
+import de.greenrobot.event.EventBus;
 import me.freetymekiyan.smartring.R;
+import me.freetymekiyan.smartring.controllers.PrefChangedEvent;
 
 ;
 
@@ -28,6 +30,13 @@ public class MyPreferenceFragment extends PreferenceFragment implements
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_general);
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
+                this);
     }
 
     @Override
@@ -68,7 +77,8 @@ public class MyPreferenceFragment extends PreferenceFragment implements
     void updatePreference(Preference pref) {
         if (pref instanceof ListPreference) {
             ListPreference listPref = (ListPreference) pref;
-            listPref.setSummary(listPref.getEntry() != null ? listPref.getEntry() : getString(R.string.daily));
+            listPref.setSummary(
+                    listPref.getEntry() != null ? listPref.getEntry() : getString(R.string.daily));
         }
         if (pref instanceof EditTextPreference) {
             String title = pref.getTitle().toString();
@@ -76,6 +86,8 @@ public class MyPreferenceFragment extends PreferenceFragment implements
             if (title.equals(getString(R.string.name))) {
                 pref.setSummary(
                         (text == null || text.isEmpty()) ? getString(R.string.name_summary) : text);
+                EventBus.getDefault().post(
+                        new PrefChangedEvent(pref.getSummary() + "", R.string.key_name));
             } else if (title.equals(getString(R.string.weight))) {
                 pref.setSummary(
                         (text == null || text.isEmpty()) ? getString(R.string.weight_summary)
@@ -85,6 +97,8 @@ public class MyPreferenceFragment extends PreferenceFragment implements
                         (text == null || text.isEmpty()) ? getString(R.string.age_summary) : text);
             } else if (title.equals(getString(R.string.email))) {
                 pref.setSummary(text);
+                EventBus.getDefault()
+                        .post(new PrefChangedEvent(pref.getSummary() + "", R.string.key_email));
             }
         }
         if (pref instanceof SwitchPreference) {

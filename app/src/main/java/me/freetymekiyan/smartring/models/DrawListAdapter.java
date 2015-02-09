@@ -102,4 +102,12 @@ public class DrawListAdapter extends RecyclerView.Adapter<DrawListAdapter.ViewHo
     public int getItemViewType(int position) {
         return position == 0 ? TYPE_HEADER : TYPE_ITEM;
     }
+
+    public void setName(String newName) {
+        name = newName;
+    }
+
+    public void setEmail(String newEmail) {
+        email = newEmail;
+    }
 }
