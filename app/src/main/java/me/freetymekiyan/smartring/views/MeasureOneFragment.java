@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import de.greenrobot.event.EventBus;
 import me.freetymekiyan.smartring.R;
@@ -136,10 +137,8 @@ public class MeasureOneFragment extends Fragment implements View.OnClickListener
             case R.id.centerImage:
                 if (isReceiving()) {
                     stopUpdateNfc();
-
                 } else {
                     startUpdateNfc();
-
                 }
                 break;
             default:
@@ -149,14 +148,14 @@ public class MeasureOneFragment extends Fragment implements View.OnClickListener
 
     private void stopUpdateNfc() {
         rippleBkg.stopRippleAnimation();
+        Toast.makeText(getActivity(), R.string.toast_stop_reading, Toast.LENGTH_SHORT).show();
         onNFCStateChanged(false);
     }
 
     private void startUpdateNfc() {
         rippleBkg.startRippleAnimation();
+        Toast.makeText(getActivity(), R.string.toast_start_reading, Toast.LENGTH_SHORT).show();
         onNFCStateChanged(true);
-//        sum = 0;
-//        count = 0;
     }
 
     private boolean isReceiving() {
