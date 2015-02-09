@@ -1,5 +1,6 @@
 package me.freetymekiyan.smartring.views;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.skyfishjy.library.RippleBackground;
 
 import android.app.Activity;
@@ -9,15 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import de.greenrobot.event.EventBus;
 import me.freetymekiyan.smartring.R;
 import me.freetymekiyan.smartring.controllers.MeasureEvent;
+import me.freetymekiyan.smartring.models.MySqlDbHelper;
+import me.freetymekiyan.smartring.models.Pulse;
 
 public class MeasureOneFragment extends Fragment implements View.OnClickListener {
 
     private RippleBackground rippleBkg;
+
+    private MySqlDbHelper mDbHelper;
 
     public String getTitle() {
         return title;
@@ -57,6 +61,7 @@ public class MeasureOneFragment extends Fragment implements View.OnClickListener
         if (getArguments() != null) {
             title = getArguments().getString(MainActivity.KEY_TITLE);
         }
+        mDbHelper = new MySqlDbHelper(getActivity());
     }
 
     @Override
@@ -88,9 +93,33 @@ public class MeasureOneFragment extends Fragment implements View.OnClickListener
         EventBus.getDefault().register(this);
     }
 
-    public void onEvent(MeasureEvent event){
-        Toast.makeText(getActivity(), event.message, Toast.LENGTH_SHORT).show();
+    public void onEvent(final MeasureEvent event) {
         stopUpdateNfc();
+        final MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+        builder.title(R.string.dialog_state_title)
+                .content(R.string.dialog_state_content, event.result)
+                .positiveText(R.string.active)
+                .negativeText(R.string.rest)
+                .neutralText(android.R.string.cancel)
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        super.onPositive(dialog);
+                        mDbHelper.addPulseRate(event.result, Pulse.State.ACTIVE.ordinal());
+                    }
+
+                    @Override
+                    public void onNegative(MaterialDialog dialog) {
+                        super.onNegative(dialog);
+                        mDbHelper.addPulseRate(event.result, Pulse.State.REST.ordinal());
+                    }
+
+                    @Override
+                    public void onNeutral(MaterialDialog dialog) {
+                        super.onNeutral(dialog);
+                    }
+                })
+                .show();
     }
 
 

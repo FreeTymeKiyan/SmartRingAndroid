@@ -36,7 +36,7 @@ public class TestDbFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_test_db, container, false);
         Button btnCreate = (Button) view.findViewById(R.id.btn_create);
         Button btnRead = (Button) view.findViewById(R.id.btn_read);
-        Button btnUpdate = (Button) view.findViewById(R.id.btn_update);
+        Button btnUpdate = (Button) view.findViewById(R.id.btn_test_data);
         Button btnDelete = (Button) view.findViewById(R.id.btn_delete);
         btnCreate.setOnClickListener(this);
         btnRead.setOnClickListener(this);
@@ -69,7 +69,8 @@ public class TestDbFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_read:
                 tvValues.setText(mDbHelper.getAllPulses());
                 break;
-            case R.id.btn_update:
+            case R.id.btn_test_data:
+                mDbHelper.addLast7Days();
                 break;
             case R.id.btn_delete:
                 break;

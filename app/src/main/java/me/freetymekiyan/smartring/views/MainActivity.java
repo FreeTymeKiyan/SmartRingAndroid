@@ -3,19 +3,19 @@ package me.freetymekiyan.smartring.views;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +26,7 @@ import de.greenrobot.event.EventBus;
 import me.freetymekiyan.smartring.R;
 import me.freetymekiyan.smartring.controllers.MeasureEvent;
 import me.freetymekiyan.smartring.controllers.OnFragmentInteractionListener;
+import me.freetymekiyan.smartring.controllers.PrefChangedEvent;
 import me.freetymekiyan.smartring.controllers.RecyclerItemClickListener;
 import me.freetymekiyan.smartring.models.DrawListAdapter;
 
@@ -40,10 +41,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
 
     public static final int SETTINGS_FRAGMENT = 3;
 
-    private final String name = "Yang Liu";
-
-    private final String email = "freetymesunkiyan@gmail.com";
-
     private final int profile = R.drawable.photo;
 
     private final int[] icons = {R.drawable.ic_measure, R.drawable.ic_history,
@@ -53,7 +50,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
 
     RecyclerView mRcView;
 
-    RecyclerView.Adapter mDrawerAdapter;
+    DrawListAdapter mDrawerAdapter;
 
     RecyclerView.LayoutManager mLayoutManager;
 
@@ -77,15 +74,20 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
 
     private float result;
 
-    private boolean enabled;
+    private boolean enabled = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.measure);
+
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String name = sp.getString(getString(R.string.key_name), getString(R.string.ph_name));
+        String email = sp.getString(getString(R.string.key_email), getString(R.string.ph_email));
 
         mRcView = (RecyclerView) findViewById(R.id.recycle_view);
         mRcView.setHasFixedSize(true);
@@ -175,7 +177,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
         } else {
             mPendingIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-
             IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
             try {
                 ndef.addDataType("text/plain");
@@ -184,13 +185,16 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
             }
             mIntentFilters = new IntentFilter[]{ndef,};
         }
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+            // TODO Start measure right away
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
-        Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        Log.d("DEBUG", "onNewIntent");
+//        Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+//        Log.d("DEBUG", "onNewIntent: " + intent.getAction());
     }
 
     @Override
@@ -223,6 +227,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
             processIntent(getIntent());
         }
         mAdapter.enableForegroundDispatch(this, mPendingIntent, mIntentFilters, null);
+        EventBus.getDefault().register(this);
     }
 
     void processIntent(Intent intent) {
@@ -232,18 +237,22 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
             for (int i = 0; i < rawMsgs.length; i++) {
                 msgs[i] = (NdefMessage) rawMsgs[i];
                 String msg = new String(msgs[i].getRecords()[0].getPayload());
-                Log.d("DEBUG", "msg: " + msg);
+//                Log.d("DEBUG", "msg: " + msg);
                 if (!msg.equals("\u0003me.freetymekiyan.smartring")) {
-                    if (count <= 10 && enabled) {
-                        float rate = Float.valueOf(msg.substring(START_INDEX, START_INDEX + 4))
-                                * 8192 / 8000000;
-                        sum += 60 / rate;
-                        count++;
-                    } else {
+                    if (enabled) {
+                        if (count <= 10) {
+                            float rate = Float.valueOf(msg.substring(START_INDEX, START_INDEX + 4))
+                                    * 8192 / 8000000;
+                            sum += 60 / rate;
+                            count++;
+                            Toast.makeText(this, "Current Pulse: " + 60 / rate, Toast.LENGTH_SHORT)
+                                    .show();
+                        } else {
 //                      TODO stopUpdateNfc() in measure one fragment;
-                        EventBus.getDefault().post(new MeasureEvent("Stop measurement"));
-                        result = sum / count;
-                        // TODO show result, choose state, and insert to db
+                            EventBus.getDefault().post(new MeasureEvent((int) sum / count));
+                            result = sum / count;
+                            // TODO show result, choose state, and insert to db
+                        }
                     }
                 }
             }
@@ -254,10 +263,27 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
     protected void onPause() {
         super.onPause();
         mAdapter.disableForegroundDispatch(this);
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onMeasureStateChanged(boolean enabled) {
         this.enabled = enabled;
+        if (enabled == true) {
+            sum = 0;
+            count = 0;
+        }
+    }
+
+    public void onEvent(PrefChangedEvent event) {
+        switch (event.prefKey) {
+            case R.string.key_name:
+                mDrawerAdapter.setName(event.newValue);
+                break;
+            case R.string.key_email:
+                mDrawerAdapter.setEmail(event.newValue);
+                break;
+        }
+        mDrawerAdapter.notifyItemChanged(0);
     }
 }
