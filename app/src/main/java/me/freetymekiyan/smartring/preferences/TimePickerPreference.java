@@ -59,6 +59,7 @@ public class TimePickerPreference extends DialogPreference {
     public void updateSummary() {
         String time = String.valueOf(mHour) + ":" + String.valueOf(mMinute);
         setSummary(time24to12(time));
+//        setSummary(time);
     }
 
     @Override
@@ -135,5 +136,14 @@ public class TimePickerPreference extends DialogPreference {
         } else {
             return inTime;
         }
+    }
+
+
+    public int getHour() {
+        return getHour(getSummary() + "");
+    }
+
+    public int getMinute() {
+        return getMinute(getSummary() + "");
     }
 }

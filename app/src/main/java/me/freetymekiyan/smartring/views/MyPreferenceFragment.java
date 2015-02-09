@@ -2,6 +2,7 @@ package me.freetymekiyan.smartring.views;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -11,11 +12,15 @@ import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.support.v4.preference.PreferenceFragment;
+import android.util.Log;
 import android.view.View;
+
+import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
 import me.freetymekiyan.smartring.R;
 import me.freetymekiyan.smartring.controllers.PrefChangedEvent;
+import me.freetymekiyan.smartring.preferences.TimePickerPreference;
 
 ;
 
@@ -111,5 +116,23 @@ public class MyPreferenceFragment extends PreferenceFragment implements
                     ((SwitchPreference) pref).isChecked() ? ((SwitchPreference) pref).getSummaryOn()
                             : ((SwitchPreference) pref).getSummaryOff());
         }
+        if (pref instanceof TimePickerPreference) {
+            TimePickerPreference t = (TimePickerPreference) pref;
+            setRecurringAlarm(getActivity(), t.getHour(), t.getMinute());
+        }
+    }
+
+    private void setRecurringAlarm(Context context, int hour, int min) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hour);
+        c.set(Calendar.MINUTE, min);
+        Log.d("DEBUG", "hour: " + hour + " min: " + min);
+//
+//        PendingIntent pi = PendingIntent.getBroadcast(context,
+//                0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
+//        AlarmManager alarms = (AlarmManager) getActivity().getSystemService(
+//                Context.ALARM_SERVICE);
+//        alarms.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+//                AlarmManager.INTERVAL_DAY, pi);
     }
 }
