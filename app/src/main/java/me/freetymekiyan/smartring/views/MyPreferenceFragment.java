@@ -2,7 +2,10 @@ package me.freetymekiyan.smartring.views;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -21,11 +24,19 @@ import de.greenrobot.event.EventBus;
 import me.freetymekiyan.smartring.R;
 import me.freetymekiyan.smartring.controllers.PrefChangedEvent;
 import me.freetymekiyan.smartring.preferences.TimePickerPreference;
+import me.freetymekiyan.smartring.receivers.AlarmReceiver;
 
 ;
 
 public class MyPreferenceFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
+
+    public static final long INTERVAL_WEEK = AlarmManager.INTERVAL_DAY * 7;
+
+    public static final long INTERVAL_MONTH = INTERVAL_WEEK * 4;
+
+    public static final long[] INTEVALS = {AlarmManager.INTERVAL_DAY, INTERVAL_WEEK,
+            INTERVAL_MONTH};
 
     public MyPreferenceFragment() {
         // Required empty public constructor
@@ -89,6 +100,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements
             ListPreference listPref = (ListPreference) pref;
             listPref.setSummary(
                     listPref.getEntry() != null ? listPref.getEntry() : getString(R.string.daily));
+            setRecurringAlarm(getActivity(), listPref.getValue());
         }
         if (pref instanceof EditTextPreference) {
             String title = pref.getTitle().toString();
@@ -123,16 +135,29 @@ public class MyPreferenceFragment extends PreferenceFragment implements
     }
 
     private void setRecurringAlarm(Context context, int hour, int min) {
+        final String intervalVal = getPreferenceScreen().getSharedPreferences()
+                .getString(getString(R.string.key_frequency), getString(R.string.freq_daily));
+        setAlarm(getActivity(), hour, min, INTEVALS[Integer.valueOf(intervalVal)]);
+    }
+
+    private void setRecurringAlarm(Context context, String value) {
+        long interval = INTEVALS[Integer.valueOf(value)];
+        final String time = getPreferenceScreen().getSharedPreferences().getString(
+                getString(R.string.key_time), TimePickerPreference.DEFAULT_VALUE);
+        setAlarm(getActivity(), TimePickerPreference.getHour(time),
+                TimePickerPreference.getMinute(time), interval);
+    }
+
+    private void setAlarm(Context context, int hour, int min, long interval) {
         Calendar c = Calendar.getInstance();
+        c.clear(Calendar.SECOND);
         c.set(Calendar.HOUR_OF_DAY, hour);
         c.set(Calendar.MINUTE, min);
-        Log.d("DEBUG", "hour: " + hour + " min: " + min);
-//
-//        PendingIntent pi = PendingIntent.getBroadcast(context,
-//                0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
-//        AlarmManager alarms = (AlarmManager) getActivity().getSystemService(
-//                Context.ALARM_SERVICE);
-//        alarms.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-//                AlarmManager.INTERVAL_DAY, pi);
+        Log.d("DEBUG", c.getTime().toString());
+
+        PendingIntent pi = PendingIntent.getBroadcast(context,
+                0, new Intent(context, AlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarms = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        alarms.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), interval, pi);
     }
 }
