@@ -79,5 +79,14 @@
     <string name="rest">Rest</string>
     <string name="active">Active</string>
     <string name="toast_nfc_not_available">NFC is not available</string>
+    <string name="dialog_state_title">Choose state</string>
+    <string name="dialog_state_pos_txt">Choose</string>
+    <string-array name="dialog_state_items">
+        <item>@string/rest</item>
+        <item>@string/active</item>
+    </string-array>
+    <string name="dialog_state_content">Your pulse rate is: %1$d</string>
+    <string name="ph_name">Enter name in Settings</string>
+    <string name="ph_email">Enter email in Settings</string>
 
 </resources>
