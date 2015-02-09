@@ -21,7 +21,7 @@ public class TimePickerPreference extends DialogPreference {
 
     private TimePicker picker = null;
 
-    private final String DEFAULT_VALUE = "00:00";
+    public static final String DEFAULT_VALUE = "08:00";
 
     public static int getHour(String time) {
         String[] pieces = time.split(":");
@@ -58,8 +58,8 @@ public class TimePickerPreference extends DialogPreference {
 
     public void updateSummary() {
         String time = String.valueOf(mHour) + ":" + String.valueOf(mMinute);
-        setSummary(time24to12(time));
-//        setSummary(time);
+//        setSummary(time24to12(time));
+        setSummary(time24(time));
     }
 
     @Override
@@ -128,6 +128,16 @@ public class TimePickerPreference extends DialogPreference {
         }
     }
 
+    public static String time24(String inTime) {
+        Date inDate = toDate(inTime);
+        if (inDate != null) {
+            DateFormat outTimeFormat = new SimpleDateFormat("HH:mm", Locale.US);
+            return outTimeFormat.format(inDate);
+        } else {
+            return inTime;
+        }
+    }
+
     public static String time24to12(String inTime) {
         Date inDate = toDate(inTime);
         if (inDate != null) {
@@ -139,11 +149,15 @@ public class TimePickerPreference extends DialogPreference {
     }
 
 
+    public String getValue() {
+        return getPersistedString(DEFAULT_VALUE);
+    }
+
     public int getHour() {
-        return getHour(getSummary() + "");
+        return getHour(getPersistedString(DEFAULT_VALUE));
     }
 
     public int getMinute() {
-        return getMinute(getSummary() + "");
+        return getMinute(getPersistedString(DEFAULT_VALUE));
     }
 }
