@@ -88,5 +88,6 @@
     <string name="dialog_state_content">Your pulse rate is: %1$d</string>
     <string name="ph_name">Enter name in Settings</string>
     <string name="ph_email">Enter email in Settings</string>
+    <string name="about_content">This APP is developed by Wei Zhen and Yang Liu for the Smart Ring which can read your heart rate and keep track of the readings.</string>
 
 </resources>

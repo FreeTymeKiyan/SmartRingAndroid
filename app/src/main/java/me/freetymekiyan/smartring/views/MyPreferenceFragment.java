@@ -1,5 +1,7 @@
 package me.freetymekiyan.smartring.views;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -9,7 +11,6 @@ import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.support.v4.preference.PreferenceFragment;
-import android.util.Log;
 import android.view.View;
 
 import de.greenrobot.event.EventBus;
@@ -47,7 +48,11 @@ public class MyPreferenceFragment extends PreferenceFragment implements
 
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.d("DEBUG", "About Clicked");
+                new MaterialDialog.Builder(getActivity())
+                        .title(R.string.about)
+                        .content(R.string.about_content)
+                        .positiveText(android.R.string.ok)
+                        .show();
                 return true;
             }
         });
