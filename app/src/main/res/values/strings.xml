@@ -12,7 +12,7 @@
 
     <string-array name="titles">
         <item>@string/measure</item>
-        <item>@string/history</item>
+        <item>@string/analysis</item>
         <item>@string/settings</item>
     </string-array>
 
@@ -106,5 +106,6 @@
     <string name="percent_range_anaerobic">80% ~ 90% MHR</string>
     <string name="anaerobic">Anaerobic</string>
     <string name="notes">- BPM: Beats per Minute \n- MHR: Max Heart Rate</string>
+    <string name="analysis">Analysis</string>
 
 </resources>

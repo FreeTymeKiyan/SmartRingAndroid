@@ -15,17 +15,17 @@ import me.freetymekiyan.smartring.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ReportWrapperFragment extends Fragment {
+public class AnalysisFragment extends Fragment {
 
-    private static ReportWrapperFragment instance;
+    private static AnalysisFragment instance;
 
-    public ReportWrapperFragment() {
+    public AnalysisFragment() {
         // Required empty public constructor
     }
 
-    public static ReportWrapperFragment getInstance() {
+    public static AnalysisFragment getInstance() {
         if (instance == null) {
-            instance = new ReportWrapperFragment();
+            instance = new AnalysisFragment();
         }
         return instance;
     }

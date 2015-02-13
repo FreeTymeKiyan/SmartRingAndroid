@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
 
     public static final int MEASURE_FRAGMENT = 1;
 
-    public static final int HISTORY_FRAGMENT = 2;
+    public static final int ANALYSIS_FRAGMENT = 2;
 
     public static final int SETTINGS_FRAGMENT = 3;
 
@@ -114,8 +114,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
                     case MEASURE_FRAGMENT:
                         toolbar.setTitle(R.string.measure);
                         break;
-                    case HISTORY_FRAGMENT:
-                        toolbar.setTitle(R.string.history);
+                    case ANALYSIS_FRAGMENT:
+                        toolbar.setTitle(R.string.analysis);
                         break;
                     case SETTINGS_FRAGMENT:
                         toolbar.setTitle(R.string.settings);
@@ -143,13 +143,13 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
                                     toolbar.setTitle(R.string.measure);
                                 }
                                 break;
-                            case HISTORY_FRAGMENT:
-                                if (page != HISTORY_FRAGMENT) {
+                            case ANALYSIS_FRAGMENT:
+                                if (page != ANALYSIS_FRAGMENT) {
                                     getSupportFragmentManager().beginTransaction()
                                             .replace(R.id.content_frame,
-                                                    ReportWrapperFragment.getInstance()).commit();
-                                    page = HISTORY_FRAGMENT;
-                                    toolbar.setTitle(R.string.history);
+                                                    AnalysisFragment.getInstance()).commit();
+                                    page = ANALYSIS_FRAGMENT;
+                                    toolbar.setTitle(R.string.analysis);
                                 }
                                 break;
                             case SETTINGS_FRAGMENT:
