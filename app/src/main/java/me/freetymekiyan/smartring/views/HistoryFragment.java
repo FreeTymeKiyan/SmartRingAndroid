@@ -7,8 +7,11 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.LimitLine;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +36,6 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
 
     private static final String X_VAL_FORMAT = "MM/dd";
 
-    private static HistoryFragment instance;
-
     private BarChart mChart;
 
     private MySqlDbHelper db;
@@ -43,11 +44,12 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         // Required empty public constructor
     }
 
-    public static HistoryFragment getInstance() {
-        if (instance == null) {
-            instance = new HistoryFragment();
-        }
-        return instance;
+    public static HistoryFragment newInstance(String title) {
+        HistoryFragment fragment = new HistoryFragment();
+        Bundle args = new Bundle();
+        args.putString(MainActivity.KEY_TITLE, title);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -122,7 +124,57 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
 
         BarData data = new BarData(xVals, dataSets);
         data.setGroupSpace(110f);
+
+        LimitLine lowerLimit = new LimitLine(60f);
+        lowerLimit.setDrawValue(false);
+        lowerLimit.setLineColor(getResources().getColor(R.color.PrimaryColor));
+        lowerLimit.setLineWidth(0.5f);
+        lowerLimit.enableDashedLine(12f, 2f, 0f);
+        data.addLimitLine(lowerLimit);
+
+        LimitLine lowerLimit2 = new LimitLine(90f);
+        lowerLimit2.setDrawValue(false);
+        lowerLimit2.setLineColor(getResources().getColor(R.color.PrimaryColor));
+        lowerLimit2.setLineWidth(0.5f);
+        lowerLimit2.enableDashedLine(12f, 2f, 0f);
+        data.addLimitLine(lowerLimit2);
+
+        final float v = getUpperLimitValue();
+        if (v != 0) {
+            LimitLine upperLimit = new LimitLine(v);
+            upperLimit.setLineColor(getResources().getColor(R.color.PrimaryColor));
+            upperLimit.setLineWidth(0.5f);
+            upperLimit.enableDashedLine(12f, 2f, 0f);
+            upperLimit.setLabelPosition(LimitLine.LimitLabelPosition.LEFT);
+            data.addLimitLine(upperLimit);
+        }
         mChart.setData(data);
+    }
+
+    private float getUpperLimitValue() {
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String age = sp.getString(getString(R.string.key_age), "");
+        boolean gender = sp.getBoolean(getString(R.string.key_gender), true);
+        if (age.isEmpty()) return 0f;
+        return gender ? getMaleHr(age) : getFemaleHr(age);
+    }
+
+    /**
+     * Gulati method, for women, 2010
+     * @param age
+     * @return
+     */
+    private float getFemaleHr(String age) {
+        return 0.9f * (206 - 0.88f * Integer.valueOf(age));
+    }
+
+    /**
+     * Least objectionable formula
+     * @param age
+     * @return
+     */
+    private float getMaleHr(String age) {
+        return 0.9f * (205.8f - 0.685f * Integer.valueOf(age));
     }
 
     /**
