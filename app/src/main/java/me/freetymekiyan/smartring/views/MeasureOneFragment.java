@@ -24,12 +24,6 @@ public class MeasureOneFragment extends Fragment implements View.OnClickListener
 
     private MySqlDbHelper mDbHelper;
 
-    public String getTitle() {
-        return title;
-    }
-
-    private String title;
-
     private OnMeasureListener mListener;
 
     public interface OnMeasureListener {
@@ -37,18 +31,8 @@ public class MeasureOneFragment extends Fragment implements View.OnClickListener
         public void onMeasureStateChanged(boolean enabled);
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param title Parameter 1.
-     * @return A new instance of fragment MeasureOneFragment.
-     */
-    public static MeasureOneFragment newInstance(String title) {
+    public static MeasureOneFragment newInstance() {
         MeasureOneFragment fragment = new MeasureOneFragment();
-        Bundle args = new Bundle();
-        args.putString(MainActivity.KEY_TITLE, title);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -59,9 +43,6 @@ public class MeasureOneFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            title = getArguments().getString(MainActivity.KEY_TITLE);
-        }
         mDbHelper = new MySqlDbHelper(getActivity());
     }
 
