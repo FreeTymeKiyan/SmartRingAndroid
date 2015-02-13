@@ -15,17 +15,17 @@ import me.freetymekiyan.smartring.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MeasureFragment extends Fragment {
+public class ReportWrapperFragment extends Fragment {
 
-    private static MeasureFragment instance;
+    private static ReportWrapperFragment instance;
 
-    public MeasureFragment() {
+    public ReportWrapperFragment() {
         // Required empty public constructor
     }
 
-    public static MeasureFragment getInstance() {
+    public static ReportWrapperFragment getInstance() {
         if (instance == null) {
-            instance = new MeasureFragment();
+            instance = new ReportWrapperFragment();
         }
         return instance;
     }
@@ -39,7 +39,7 @@ public class MeasureFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_measure, container, false);
+        View view = inflater.inflate(R.layout.fragment_report_wrapper, container, false);
         MeasurePagerAdapter mPagerAdapter = new MeasurePagerAdapter(
                 getChildFragmentManager());
         ViewPager mViewPager = (ViewPager) view.findViewById(R.id.pager);
@@ -56,9 +56,9 @@ public class MeasureFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return (Fragment) MeasureOneFragment.newInstance(getString(R.string.title_fragment_measure_one));
+                return (Fragment) HistoryFragment.newInstance(getString(R.string.history));
             } else {
-                return (Fragment) MeasureSeriesFragment.newInstance(getString(R.string.title_fragment_measure_series));
+                return (Fragment) ReportFragment.newInstance(getString(R.string.report));
             }
         }
 
