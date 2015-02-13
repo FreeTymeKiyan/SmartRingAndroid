@@ -20,6 +20,7 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_fragment_measure_one">One</string>
     <string name="title_fragment_measure_series">Series</string>
+    <string name="report">Report</string>
     <string name="tv_pulse">Pulse and Count</string>
     <string name="nfc_state">NFC State</string>
     <string name="user">User</string>
@@ -93,5 +94,17 @@
     <string name="toast_stop_reading">Reading stopped</string>
     <string name="noti_title">Smart Ring</string>
     <string name="noti_text">Time to take a look at your heart rate!</string>
+    <string name="description">Description</string>
+    <string name="range">Your Range / BPM</string>
+    <string name="rest_range">60 ~ 90</string>
+    <string name="moderate_activity">Moderate activity</string>
+    <string name="percent_range_moderate_activity">50% ~ 60% MHR</string>
+    <string name="weight_control">Weight control</string>
+    <string name="percent_range_weight_control">60% ~ 70% MHR</string>
+    <string name="aerobic">Aerobic</string>
+    <string name="percent_range_aerobic">70% ~ 80% MHR</string>
+    <string name="percent_range_anaerobic">80% ~ 90% MHR</string>
+    <string name="anaerobic">Anaerobic</string>
+    <string name="notes">- BPM: Beats per Minute \n- MHR: Max Heart Rate</string>
 
 </resources>
