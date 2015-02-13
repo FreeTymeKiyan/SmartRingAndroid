@@ -136,9 +136,9 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
                         switch (position) {
                             case MEASURE_FRAGMENT:
                                 if (page != MEASURE_FRAGMENT) {
-                                    getSupportFragmentManager().beginTransaction()
-                                            .replace(R.id.content_frame,
-                                                    MeasureFragment.getInstance()).commit();
+                                    getSupportFragmentManager().beginTransaction().replace(
+                                            R.id.content_frame, MeasureOneFragment.newInstance())
+                                            .commit();
                                     page = MEASURE_FRAGMENT;
                                     toolbar.setTitle(R.string.measure);
                                 }
@@ -147,7 +147,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
                                 if (page != HISTORY_FRAGMENT) {
                                     getSupportFragmentManager().beginTransaction()
                                             .replace(R.id.content_frame,
-                                                    HistoryFragment.getInstance()).commit();
+                                                    ReportWrapperFragment.getInstance()).commit();
                                     page = HISTORY_FRAGMENT;
                                     toolbar.setTitle(R.string.history);
                                 }
@@ -167,8 +167,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
                         drawer.closeDrawer(Gravity.LEFT);
                     }
                 }));
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,
-                MeasureFragment.getInstance()).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, MeasureOneFragment.newInstance()).commit();
         // NFC Adapter
         mAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mAdapter == null) {
