@@ -1,10 +1,13 @@
 package me.freetymekiyan.smartring.receivers;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -20,11 +23,14 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("DEBUG", "Recurring Alarm");
-        // TODO shoot an notification
+        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_big_noti);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setLargeIcon(icon)
                         .setContentTitle(context.getString(R.string.noti_title))
+                        .setAutoCancel(true)
+                        .setDefaults(Notification.DEFAULT_ALL)
                         .setContentText(context.getString(R.string.noti_text));
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);
