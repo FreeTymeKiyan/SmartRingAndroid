@@ -82,25 +82,25 @@ public class MyPreferenceFragment extends PreferenceFragment implements
             if (pref instanceof PreferenceGroup) {
                 PreferenceGroup preferenceGroup = (PreferenceGroup) pref;
                 for (int j = 0; j < preferenceGroup.getPreferenceCount(); j++) {
-                    updatePreference(preferenceGroup.getPreference(j));
+                    updatePreference(preferenceGroup.getPreference(j), false);
                 }
             } else {
-                updatePreference(pref);
+                updatePreference(pref, false);
             }
         }
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        updatePreference(findPreference(key));
+        updatePreference(findPreference(key), true);
     }
 
-    void updatePreference(Preference pref) {
+    void updatePreference(Preference pref, boolean fromUser) {
         if (pref instanceof ListPreference) {
             ListPreference listPref = (ListPreference) pref;
             listPref.setSummary(
                     listPref.getEntry() != null ? listPref.getEntry() : getString(R.string.daily));
-            setRecurringAlarm(getActivity(), listPref.getValue());
+            if (fromUser) setRecurringAlarm(getActivity(), listPref.getValue());
         }
         if (pref instanceof EditTextPreference) {
             String title = pref.getTitle().toString();
@@ -118,7 +118,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements
                 pref.setSummary(
                         (text == null || text.isEmpty()) ? getString(R.string.age_summary) : text);
             } else if (title.equals(getString(R.string.email))) {
-                pref.setSummary(text);
+                pref.setSummary(text == null || text.isEmpty() ? getString(R.string.email_summary) : text);
                 EventBus.getDefault()
                         .post(new PrefChangedEvent(pref.getSummary() + "", R.string.key_email));
             }
@@ -130,7 +130,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements
         }
         if (pref instanceof TimePickerPreference) {
             TimePickerPreference t = (TimePickerPreference) pref;
-            setRecurringAlarm(getActivity(), t.getHour(), t.getMinute());
+            if (fromUser) setRecurringAlarm(getActivity(), t.getHour(), t.getMinute());
         }
     }
 
@@ -153,10 +153,13 @@ public class MyPreferenceFragment extends PreferenceFragment implements
         c.clear(Calendar.SECOND);
         c.set(Calendar.HOUR_OF_DAY, hour);
         c.set(Calendar.MINUTE, min);
+        if (c.getTimeInMillis() < System.currentTimeMillis()) {
+            c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 1);
+        }
         Log.d("DEBUG", c.getTime().toString());
 
         PendingIntent pi = PendingIntent.getBroadcast(context,
-                0, new Intent(context, AlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
+                0, new Intent(context, AlarmReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarms = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         alarms.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), interval, pi);
     }

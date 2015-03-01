@@ -32,6 +32,7 @@
     <string name="key_name">key_name</string>
     <string name="name">Name</string>
     <string name="name_summary">Enter user name</string>
+    <string name="email_summary">Enter user email</string>
     <string name="key_gender">key_gender</string>
     <string name="gender">Gender</string>
     <string name="male_short">M</string>
