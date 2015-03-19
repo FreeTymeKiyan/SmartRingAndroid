@@ -226,7 +226,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
             processIntent(getIntent());
         }
-        mAdapter.enableForegroundDispatch(this, mPendingIntent, mIntentFilters, null);
+        if (mAdapter != null)
+            mAdapter.enableForegroundDispatch(this, mPendingIntent, mIntentFilters, null);
         EventBus.getDefault().register(this);
     }
 
@@ -262,7 +263,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
     @Override
     protected void onPause() {
         super.onPause();
-        mAdapter.disableForegroundDispatch(this);
+        if (mAdapter != null)
+            mAdapter.disableForegroundDispatch(this);
         EventBus.getDefault().unregister(this);
     }
 
