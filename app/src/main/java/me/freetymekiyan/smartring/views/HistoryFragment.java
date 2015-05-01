@@ -1,6 +1,5 @@
 package me.freetymekiyan.smartring.views;
 
-
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -9,9 +8,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.LimitLine;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +23,10 @@ import java.util.Locale;
 import java.util.Random;
 
 import me.freetymekiyan.smartring.R;
+import me.freetymekiyan.smartring.utils.Utils;
 import me.freetymekiyan.smartring.models.MySqlDbHelper;
 import me.freetymekiyan.smartring.models.Pulse;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class HistoryFragment extends Fragment implements OnChartValueSelectedListener {
 
     private static final String X_VAL_FORMAT = "MM/dd";
@@ -139,7 +134,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         lowerLimit2.enableDashedLine(12f, 2f, 0f);
         data.addLimitLine(lowerLimit2);
 
-        final float v = getUpperLimitValue();
+        final float v = 0.9f * Utils.getUpperLimitValue(getActivity()); // 0.9 * mxr
         if (v != 0) {
             LimitLine upperLimit = new LimitLine(v);
             upperLimit.setLineColor(getResources().getColor(R.color.PrimaryColor));
@@ -151,31 +146,7 @@ public class HistoryFragment extends Fragment implements OnChartValueSelectedLis
         mChart.setData(data);
     }
 
-    private float getUpperLimitValue() {
-        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String age = sp.getString(getString(R.string.key_age), "");
-        boolean gender = sp.getBoolean(getString(R.string.key_gender), true);
-        if (age.isEmpty()) return 0f;
-        return gender ? getMaleHr(age) : getFemaleHr(age);
-    }
 
-    /**
-     * Gulati method, for women, 2010
-     * @param age
-     * @return
-     */
-    private float getFemaleHr(String age) {
-        return 0.9f * (206 - 0.88f * Integer.valueOf(age));
-    }
-
-    /**
-     * Least objectionable formula
-     * @param age
-     * @return
-     */
-    private float getMaleHr(String age) {
-        return 0.9f * (205.8f - 0.685f * Integer.valueOf(age));
-    }
 
     /**
      * Generate test data for the graph
