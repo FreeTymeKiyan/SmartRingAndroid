@@ -2,149 +2,163 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
-    android:padding="@dimen/activity_horizontal_margin"
-    tools:context="me.freetymekiyan.smartring.views.ReportFragment"
-    android:gravity="center">
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    tools:context="me.freetymekiyan.smartring.views.ReportFragment">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="108dp"
+        android:layout_height="108dp"
+        android:src="@drawable/photo" />
+
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="username" />
 
     <TableLayout
         android:id="@+id/tl_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stretchColumns="1">
+        android:layout_marginTop="20dp"
+        android:stretchColumns="0, 1">
 
-        <TableRow>
+        <!--<TableRow>-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_column="1"-->
+        <!--android:padding="3dp"-->
+        <!--android:text="@string/description" />-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="3dp"-->
+        <!--android:text="@string/range" />-->
+        <!--</TableRow>-->
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="2dp"-->
+        <!--android:background="@color/SecondaryText" />-->
+
+        <TableRow style="@style/table_row">
+
+            <ImageView
+                style="@style/iv_table_img"
+                android:src="@drawable/photo" />
 
             <TextView
-                android:layout_column="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/description"
-                android:padding="3dp" />
+                style="@style/tv_table_words"
+                android:text="@string/rest" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/range"
-                android:padding="3dp" />
+                style="@style/tv_table_figure"
+                android:text="@string/rest_range" />
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/SecondaryText" />
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/SecondaryText" />-->
 
-        <TableRow>
+        <TableRow style="@style/table_row">
 
-            <TextView
-                android:layout_column="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/rest"
-                android:padding="3dp" />
+            <ImageView
+                style="@style/iv_table_img"
+                android:src="@drawable/photo" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/rest_range"
-                android:padding="3dp" />
+                style="@style/tv_table_words"
+                android:text="@string/moderate_activity" />
+
+            <TextView
+                style="@style/tv_table_figure"
+                android:text="@string/percent_range_moderate_activity" />
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/SecondaryText" />
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/SecondaryText" />-->
 
-        <TableRow>
+        <TableRow style="@style/table_row">
 
-            <TextView
-                android:layout_column="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/moderate_activity"
-                android:padding="3dp" />
+            <ImageView
+                style="@style/iv_table_img"
+                android:src="@drawable/photo" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/percent_range_moderate_activity"
-                android:padding="3dp" />
+                style="@style/tv_table_words"
+                android:text="@string/weight_control" />
+
+            <TextView
+                style="@style/tv_table_figure"
+                android:text="@string/percent_range_weight_control" />
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/SecondaryText" />
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/SecondaryText" />-->
 
-        <TableRow>
+        <TableRow style="@style/table_row">
 
-            <TextView
-                android:layout_column="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/weight_control"
-                android:padding="3dp" />
+            <ImageView
+                style="@style/iv_table_img"
+                android:src="@drawable/photo" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/percent_range_weight_control"
-                android:padding="3dp" />
+                style="@style/tv_table_words"
+                android:text="@string/aerobic" />
+
+            <TextView
+                style="@style/tv_table_figure"
+                android:text="@string/percent_range_aerobic" />
         </TableRow>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/SecondaryText" />
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/SecondaryText" />-->
 
-        <TableRow>
+        <TableRow style="@style/table_row">
 
-            <TextView
-                android:layout_column="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/aerobic"
-                android:padding="3dp" />
+            <ImageView
+                style="@style/iv_table_img"
+                android:src="@drawable/photo" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/percent_range_aerobic"
-                android:padding="3dp" />
-        </TableRow>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/SecondaryText" />
-
-        <TableRow>
+                style="@style/tv_table_words"
+                android:text="@string/anaerobic" />
 
             <TextView
-                android:layout_column="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/anaerobic"
-                android:padding="3dp" />
-
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/percent_range_anaerobic"
-                android:padding="3dp" />
+                style="@style/tv_table_figure"
+                android:text="@string/percent_range_anaerobic" />
         </TableRow>
 
     </TableLayout>
 
-    <TextView
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/notes" />
-    
+    <!--<TextView-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="@dimen/activity_vertical_margin"-->
+    <!--android:text="@string/notes" />-->
+
     <Button
+        android:id="@+id/btn_generate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Generate range"/>
+        android:background="@drawable/selector_bkg_btn_generate"
+        android:paddingLeft="@dimen/btn_horizontal_padding"
+        android:paddingRight="@dimen/btn_horizontal_padding"
+        android:text="@string/btn_genrate"
+        android:textColor="@color/selector_txt_color_btn_generate" />
 
 </LinearLayout>
