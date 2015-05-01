@@ -15,7 +15,6 @@ import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.support.v4.preference.PreferenceFragment;
-import android.util.Log;
 import android.view.View;
 
 import java.util.Calendar;
@@ -25,8 +24,6 @@ import me.freetymekiyan.smartring.R;
 import me.freetymekiyan.smartring.controllers.PrefChangedEvent;
 import me.freetymekiyan.smartring.preferences.TimePickerPreference;
 import me.freetymekiyan.smartring.receivers.AlarmReceiver;
-
-;
 
 public class MyPreferenceFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -156,7 +153,6 @@ public class MyPreferenceFragment extends PreferenceFragment implements
         if (c.getTimeInMillis() < System.currentTimeMillis()) {
             c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 1);
         }
-        Log.d("DEBUG", c.getTime().toString());
 
         PendingIntent pi = PendingIntent.getBroadcast(context,
                 0, new Intent(context, AlarmReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);

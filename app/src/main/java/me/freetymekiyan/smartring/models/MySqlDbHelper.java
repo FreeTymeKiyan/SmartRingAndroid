@@ -110,7 +110,6 @@ public class MySqlDbHelper extends SQLiteOpenHelper {
         while (!c.isAfterLast()) {
             String date = c.getString(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_MEASURED_DATE));
             int value = c.getInt(c.getColumnIndexOrThrow(PulseEntry.COL_NAME_AVG_VAL));
-//            Log.d("DEBUG", "date: " + date);
             Pulse p = new Pulse(value, date, Pulse.State.REST);
             res.add(p);
             c.moveToNext();

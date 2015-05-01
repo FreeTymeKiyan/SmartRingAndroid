@@ -27,7 +27,6 @@ public class MeasureOneFragment extends Fragment implements View.OnClickListener
     private OnMeasureListener mListener;
 
     public interface OnMeasureListener {
-
         public void onMeasureStateChanged(boolean enabled);
     }
 
@@ -103,7 +102,6 @@ public class MeasureOneFragment extends Fragment implements View.OnClickListener
                 })
                 .show();
     }
-
 
     @Override
     public void onDetach() {

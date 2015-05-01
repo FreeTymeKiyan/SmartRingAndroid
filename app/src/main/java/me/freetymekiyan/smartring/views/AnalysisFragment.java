@@ -1,6 +1,5 @@
 package me.freetymekiyan.smartring.views;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,9 +11,6 @@ import android.view.ViewGroup;
 
 import me.freetymekiyan.smartring.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class AnalysisFragment extends Fragment {
 
     private static AnalysisFragment instance;
