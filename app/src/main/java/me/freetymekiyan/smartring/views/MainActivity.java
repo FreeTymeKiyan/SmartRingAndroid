@@ -26,6 +26,7 @@ import de.greenrobot.event.EventBus;
 import me.freetymekiyan.smartring.R;
 import me.freetymekiyan.smartring.controllers.MeasureEvent;
 import me.freetymekiyan.smartring.controllers.OnFragmentInteractionListener;
+import me.freetymekiyan.smartring.controllers.PageChangedEvent;
 import me.freetymekiyan.smartring.controllers.PrefChangedEvent;
 import me.freetymekiyan.smartring.controllers.RecyclerItemClickListener;
 import me.freetymekiyan.smartring.models.DrawListAdapter;
@@ -41,12 +42,12 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
 
     public static final int SETTINGS_FRAGMENT = 3;
 
+    public static final int START_INDEX = 3;
+
     private final int profile = R.drawable.photo;
 
     private final int[] icons = {R.drawable.ic_measure, R.drawable.ic_history,
             R.drawable.ic_settings};
-
-    private Toolbar toolbar;
 
     RecyclerView mRcView;
 
@@ -58,6 +59,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
 
     ActionBarDrawerToggle mDrawerToggle;
 
+    private Toolbar toolbar;
+
     private int page = MEASURE_FRAGMENT;
 
     private NfcAdapter mAdapter;
@@ -67,8 +70,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
     private IntentFilter[] mIntentFilters;
 
     private int count = 0;
-
-    public static final int START_INDEX = 3;
 
     private float sum;
 
@@ -86,14 +87,15 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
         getSupportActionBar().setTitle(R.string.measure);
 
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String name = sp.getString(getString(R.string.key_name), getString(R.string.ph_name));
-        String email = sp.getString(getString(R.string.key_email), getString(R.string.ph_email));
+        String name = sp.getString(getString(R.string.key_name), "");
+        name = name.isEmpty() ? getString(R.string.ph_name) : name;
+        String email = sp.getString(getString(R.string.key_email), "");
+        email = email.isEmpty() ? getString(R.string.ph_email) : email;
 
         mRcView = (RecyclerView) findViewById(R.id.recycle_view);
         mRcView.setHasFixedSize(true);
         mDrawerAdapter = new DrawListAdapter(getResources().getStringArray(R.array.titles), icons,
-                name,
-                profile, email);
+                name, profile, email);
         mRcView.setAdapter(mDrawerAdapter);
         mLayoutManager = new LinearLayoutManager(this);
         mRcView.setLayoutManager(mLayoutManager);
@@ -153,13 +155,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
                                 }
                                 break;
                             case SETTINGS_FRAGMENT:
-                                if (page != SETTINGS_FRAGMENT) {
-                                    getSupportFragmentManager().beginTransaction()
-                                            .replace(R.id.content_frame,
-                                                    new MyPreferenceFragment()).commit();
-                                    page = SETTINGS_FRAGMENT;
-                                    toolbar.setTitle(R.string.settings);
-                                }
+                                toSettings();
                                 break;
                             default:
                                 break;
@@ -173,7 +169,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
         mAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mAdapter == null) {
             Toast.makeText(this, R.string.toast_nfc_not_available, Toast.LENGTH_LONG).show();
-            // TODO deal with not available situation
         } else {
             mPendingIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -186,15 +181,26 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
             mIntentFilters = new IntentFilter[]{ndef,};
         }
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-            // TODO Start measure right away
+
+        }
+    }
+
+    /**
+     * Open Settings page
+     */
+    private void toSettings() {
+        if (page != SETTINGS_FRAGMENT) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame,
+                            new MyPreferenceFragment()).commit();
+            page = SETTINGS_FRAGMENT;
+            toolbar.setTitle(R.string.settings);
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
-//        Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-//        Log.d("DEBUG", "onNewIntent: " + intent.getAction());
     }
 
     @Override
@@ -226,8 +232,9 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
             processIntent(getIntent());
         }
-        if (mAdapter != null)
+        if (mAdapter != null) {
             mAdapter.enableForegroundDispatch(this, mPendingIntent, mIntentFilters, null);
+        }
         EventBus.getDefault().register(this);
     }
 
@@ -238,7 +245,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
             for (int i = 0; i < rawMsgs.length; i++) {
                 msgs[i] = (NdefMessage) rawMsgs[i];
                 String msg = new String(msgs[i].getRecords()[0].getPayload());
-//                Log.d("DEBUG", "msg: " + msg);
                 if (!msg.equals("\u0003me.freetymekiyan.smartring")) {
                     if (enabled) {
                         if (count <= 10) {
@@ -249,10 +255,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
                             Toast.makeText(this, "Current Pulse: " + 60 / rate, Toast.LENGTH_SHORT)
                                     .show();
                         } else {
-//                      TODO stopUpdateNfc() in measure one fragment;
                             EventBus.getDefault().post(new MeasureEvent((int) sum / count));
                             result = sum / count;
-                            // TODO show result, choose state, and insert to db
                         }
                     }
                 }
@@ -263,8 +267,9 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
     @Override
     protected void onPause() {
         super.onPause();
-        if (mAdapter != null)
+        if (mAdapter != null) {
             mAdapter.disableForegroundDispatch(this);
+        }
         EventBus.getDefault().unregister(this);
     }
 
@@ -280,12 +285,18 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
     public void onEvent(PrefChangedEvent event) {
         switch (event.prefKey) {
             case R.string.key_name:
-                mDrawerAdapter.setName(event.newValue);
+                mDrawerAdapter.setName(event.newValue, MainActivity.this);
                 break;
             case R.string.key_email:
-                mDrawerAdapter.setEmail(event.newValue);
+                mDrawerAdapter.setEmail(event.newValue, MainActivity.this);
                 break;
         }
         mDrawerAdapter.notifyItemChanged(0);
+    }
+
+    public void onEvent(PageChangedEvent event) {
+        if (event.page == SETTINGS_FRAGMENT) {
+            toSettings();
+        }
     }
 }
