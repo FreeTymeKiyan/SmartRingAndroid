@@ -1,5 +1,6 @@
 package me.freetymekiyan.smartring.models;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,11 +104,17 @@ public class DrawListAdapter extends RecyclerView.Adapter<DrawListAdapter.ViewHo
         return position == 0 ? TYPE_HEADER : TYPE_ITEM;
     }
 
-    public void setName(String newName) {
-        name = newName;
+    public void setName(String newName, Context ctx) {
+        if (newName.equals(ctx.getString(R.string.name_summary)))
+            name = ctx.getString(R.string.ph_name);
+        else
+            name = newName;
     }
 
-    public void setEmail(String newEmail) {
-        email = newEmail;
+    public void setEmail(String newEmail, Context ctx) {
+        if (newEmail.equals(ctx.getString(R.string.email_summary)))
+            email = ctx.getString(R.string.ph_email);
+        else
+            email = newEmail;
     }
 }
