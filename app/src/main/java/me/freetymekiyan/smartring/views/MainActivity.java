@@ -77,6 +77,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
 
     private boolean enabled = false;
 
+    private Toast valueToast;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -252,8 +254,11 @@ public class MainActivity extends ActionBarActivity implements OnFragmentInterac
                                     * 8192 / 8000000;
                             sum += 60 / rate;
                             count++;
-                            Toast.makeText(this, "Current Pulse: " + 60 / rate, Toast.LENGTH_SHORT)
-                                    .show();
+                            if (valueToast != null)
+                                valueToast.cancel();
+                            valueToast = Toast.makeText(this, "Current Pulse: " + 60 / rate,
+                                    Toast.LENGTH_SHORT);
+                            valueToast.show();
                         } else {
                             EventBus.getDefault().post(new MeasureEvent((int) sum / count));
                             result = sum / count;
